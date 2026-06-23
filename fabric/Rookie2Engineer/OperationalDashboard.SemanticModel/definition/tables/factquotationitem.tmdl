@@ -1,0 +1,136 @@
+table factquotationitem
+	lineageTag: 5746c3af-3c54-42e9-98d0-1b4a918b5b02
+	sourceLineageTag: d6dd68aa-a607-4e23-b15d-7a800d4b78ab
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 17f15d8a-ebc6-43f3-8b0c-d91b4e49dc74
+		sourceLineageTag: 03b7e605-1215-4ab1-b75e-94d90299c95c
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = User
+
+	column agent_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 7bf8e461-0b40-4051-94ff-4f1de007c7a1
+		sourceLineageTag: c79b2bf1-6157-40a1-96b3-49a23453d05d
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: agent_key
+
+		annotation SummarizationSetBy = User
+
+	column provider_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 28f32e31-ad7a-49c6-b77d-d93b0e008d1f
+		sourceLineageTag: 38083604-7405-4999-81d8-b18a919eb972
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: provider_key
+
+		annotation SummarizationSetBy = User
+
+	column coverage_type
+		dataType: string
+		lineageTag: 200b3a2c-5cb1-4f73-a309-1059413a4d8a
+		sourceLineageTag: e316213b-e48e-4bd8-962e-a542f23120fc
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: coverage_type
+
+		annotation SummarizationSetBy = User
+
+	column quotation_info_key
+		dataType: int64
+		formatString: 0
+		lineageTag: f9913007-b335-4dcf-9472-07d881fb0cca
+		sourceLineageTag: 8e90658e-1459-4e66-9626-5504d891aeca
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: quotation_info_key
+
+		annotation SummarizationSetBy = User
+
+	column quotation_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 054ace47-ad19-46d7-9344-04216de6cbf1
+		sourceLineageTag: b4d5a9a8-a241-49c6-8463-8a8e078f0367
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: quotation_date_key
+
+		annotation SummarizationSetBy = User
+
+	column quotation_expiry_date
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: 93b9be0d-1f98-4ee6-9946-8f2828d4ec42
+		sourceLineageTag: d6da3f09-b600-4327-b643-5624130685fb
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: quotation_expiry_date
+
+		annotation SummarizationSetBy = User
+
+	column quotation_status
+		dataType: string
+		lineageTag: 36a29713-17a4-48b1-a76b-f3b82e684891
+		sourceLineageTag: 84b09293-db59-4d45-8ebd-a9c3ef600bb2
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: quotation_status
+
+		annotation SummarizationSetBy = User
+
+	column quotation_premium_amount
+		dataType: double
+		lineageTag: aa2a3095-751a-491e-84be-b82074725ecd
+		sourceLineageTag: bd0051e3-279e-4a9b-aae3-a0bad197e806
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: quotation_premium_amount
+
+		annotation SummarizationSetBy = User
+
+	column quotation_item_id
+		dataType: string
+		lineageTag: 0ff589db-2bec-410a-96e9-45bfd5596d3d
+		sourceLineageTag: 14e0df14-3e5e-45dd-b5f2-53d2ce780b22
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: quotation_item_id
+
+		annotation SummarizationSetBy = User
+
+	column coverage_amount
+		dataType: double
+		lineageTag: 7a2a0600-cf23-4045-a1cb-7c3ddf8be442
+		sourceLineageTag: 7a86158c-3c2b-42fc-a84f-77b5606afed8
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: coverage_amount
+
+		annotation SummarizationSetBy = User
+
+	column deductible_amount
+		dataType: double
+		lineageTag: 38b1c928-228b-4d09-a86b-4a186dc9ef91
+		sourceLineageTag: 876de6b1-a8c4-4b57-869b-363cad922fef
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: deductible_amount
+
+		annotation SummarizationSetBy = User
+
+	partition factquotationitem = entity
+		mode: directQuery
+		source
+			entityName: factquotationitem
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

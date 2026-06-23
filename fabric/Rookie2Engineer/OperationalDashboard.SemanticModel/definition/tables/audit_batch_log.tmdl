@@ -1,0 +1,72 @@
+table audit_batch_log
+	lineageTag: 20a2da7e-b270-4731-bfd9-e132507aac15
+	sourceLineageTag: bb6d7fa8-7256-41eb-a294-da56076ce91c
+
+	column audit_batch_id
+		dataType: string
+		lineageTag: 3e4cafd0-ec6a-4c70-9476-e0a126fa296a
+		sourceLineageTag: 21d9c27f-c403-43cc-916d-6faf50047dfe
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: audit_batch_id
+
+		annotation SummarizationSetBy = User
+
+	column batch_name
+		dataType: string
+		lineageTag: ddebe3e7-b313-4b3b-b9c5-76640a73adb4
+		sourceLineageTag: 38e8cb4f-4b26-40a7-9477-c32448eaf81c
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: batch_name
+
+		annotation SummarizationSetBy = User
+
+	column triggered_by
+		dataType: string
+		lineageTag: 90a4683e-a331-4c14-a47c-dfd6a8753a17
+		sourceLineageTag: b06e770f-79e9-4bdb-abfa-5667b14e0701
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: triggered_by
+
+		annotation SummarizationSetBy = User
+
+	column batch_status
+		dataType: string
+		lineageTag: d8784c18-3a8a-4007-974a-95d2a7ea0f0e
+		sourceLineageTag: 90d55ef1-ab59-4477-9a40-c42536cf1439
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: batch_status
+
+		annotation SummarizationSetBy = User
+
+	column session_start
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: a84c7ee2-f078-4704-b331-a9d7f30a0163
+		sourceLineageTag: 70b08244-23c8-478f-ab9b-04c14a0d6933
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: session_start
+
+		annotation SummarizationSetBy = User
+
+	column session_end
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: 3a12aa27-5b07-4bdc-b7a4-d6cfd14604b3
+		sourceLineageTag: 729846b4-43d2-4b35-89a1-55549c15b0cb
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: session_end
+
+		annotation SummarizationSetBy = User
+
+	partition audit_batch_log = entity
+		mode: directQuery
+		source
+			entityName: audit_batch_log
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

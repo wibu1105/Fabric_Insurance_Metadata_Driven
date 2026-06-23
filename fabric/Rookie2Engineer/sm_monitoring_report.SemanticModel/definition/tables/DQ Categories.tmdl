@@ -1,0 +1,26 @@
+table 'DQ Categories'
+	lineageTag: de017e6c-dd47-49e3-839e-dc8b5c1a5ef2
+
+	column Check
+		lineageTag: c827c6af-85e8-4e84-8e26-7fa1b6068983
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Check]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'DQ Categories' = calculated
+		mode: import
+		source =
+				
+				DATATABLE (
+				    "Check", STRING,
+				    {
+				        {"FK Integrity Check"},
+				        {"PK Duplicate"},
+				        {"Row Count"}
+				    }
+				)
+
+	annotation PBI_Id = 9cb805ed53794c57ac6d8a59b966474b
+

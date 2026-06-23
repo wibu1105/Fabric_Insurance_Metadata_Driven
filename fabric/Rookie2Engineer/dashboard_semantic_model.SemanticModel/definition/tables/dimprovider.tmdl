@@ -1,0 +1,68 @@
+table dimprovider
+	lineageTag: 373deed6-a683-4aef-ab37-d965fa8cf5f6
+	sourceLineageTag: [gold].[dimprovider]
+
+	column provider_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 753ca601-cb35-407e-b124-12e1f6b63454
+		sourceLineageTag: provider_key
+		summarizeBy: none
+		sourceColumn: provider_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column provider_code
+		dataType: string
+		lineageTag: 551d94b6-3c55-4f9c-8400-228a78e9227c
+		sourceLineageTag: provider_code
+		summarizeBy: none
+		sourceColumn: provider_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column provider_name
+		dataType: string
+		lineageTag: 39b4c19b-e073-4e8c-bb10-4f7468d181de
+		sourceLineageTag: provider_name
+		summarizeBy: none
+		sourceColumn: provider_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column provider_group
+		dataType: string
+		lineageTag: 280ecac2-3ee9-4fc7-9152-f9ff9ea09789
+		sourceLineageTag: provider_group
+		summarizeBy: none
+		sourceColumn: provider_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_flag
+		dataType: int64
+		formatString: 0
+		lineageTag: 841684bf-6f39-40f4-b9db-0702b2d08342
+		sourceLineageTag: active_flag
+		summarizeBy: sum
+		sourceColumn: active_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_deleted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 6c23551f-698d-4ea3-9cbb-9e2e03b7a1f6
+		sourceLineageTag: is_deleted
+		summarizeBy: none
+		sourceColumn: is_deleted
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimprovider = entity
+		mode: directLake
+		source
+			entityName: dimprovider
+			schemaName: gold
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

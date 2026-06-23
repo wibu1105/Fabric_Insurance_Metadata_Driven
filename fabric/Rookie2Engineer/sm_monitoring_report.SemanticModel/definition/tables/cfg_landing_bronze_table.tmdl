@@ -1,0 +1,158 @@
+table cfg_landing_bronze_table
+	lineageTag: ea88de4e-46b2-47e8-b434-edb390dd809d
+	sourceLineageTag: [cfg].[cfg_landing_bronze_table]
+
+	column table_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c8f25d1f-3380-4dd0-8a55-df7527cef985
+		sourceLineageTag: table_id
+		summarizeBy: none
+		sourceColumn: table_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_system
+		dataType: string
+		lineageTag: 7a8e79b4-10d1-4ae1-a813-e70d7caccec4
+		sourceLineageTag: source_system
+		summarizeBy: none
+		sourceColumn: source_system
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_schema
+		dataType: string
+		lineageTag: 5853c985-2e94-4534-9cef-93ab3fd4ac55
+		sourceLineageTag: source_schema
+		summarizeBy: none
+		sourceColumn: source_schema
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_table
+		dataType: string
+		lineageTag: 580fb893-fadd-4c12-bc93-d257dcd939ad
+		sourceLineageTag: source_table
+		summarizeBy: none
+		sourceColumn: source_table
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_watermark_column
+		dataType: string
+		lineageTag: 32991bd1-af09-4c2c-94db-ba94b97074f2
+		sourceLineageTag: source_watermark_column
+		summarizeBy: none
+		sourceColumn: source_watermark_column
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column destination_system
+		dataType: string
+		lineageTag: b3fa234d-3372-4988-b0d8-39189b1e803c
+		sourceLineageTag: destination_system
+		summarizeBy: none
+		sourceColumn: destination_system
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column destination_schema
+		dataType: string
+		lineageTag: 6e0fc938-43f2-46e5-88b9-b21cd275e199
+		sourceLineageTag: destination_schema
+		summarizeBy: none
+		sourceColumn: destination_schema
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column destination_table
+		dataType: string
+		lineageTag: 3af09dff-80f5-4770-a9df-78344062f162
+		sourceLineageTag: destination_table
+		summarizeBy: none
+		sourceColumn: destination_table
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_key_column
+		dataType: string
+		lineageTag: 4b84ce11-c1f4-4a50-83f8-f64629cae727
+		sourceLineageTag: primary_key_column
+		summarizeBy: none
+		sourceColumn: primary_key_column
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_type
+		dataType: string
+		lineageTag: 106d0e2e-b626-4976-b8b7-4dc2ecd7caa4
+		sourceLineageTag: load_type
+		summarizeBy: none
+		sourceColumn: load_type
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_active
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 12749ab9-820d-497e-82d4-5026ee067505
+		sourceLineageTag: is_active
+		summarizeBy: none
+		sourceColumn: is_active
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column created_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: d3ee204b-1305-477a-98b9-284cc9973de8
+		sourceLineageTag: created_date
+		summarizeBy: none
+		sourceColumn: created_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column updated_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 69368008-a13b-4621-a247-3a4a713990c6
+		sourceLineageTag: updated_date
+		summarizeBy: none
+		sourceColumn: updated_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition cfg_landing_bronze_table = entity
+		mode: directLake
+		source
+			entityName: cfg_landing_bronze_table
+			schemaName: cfg
+			expressionSource: 'DirectLake - Rookie2Engineer_Warehouse'
+

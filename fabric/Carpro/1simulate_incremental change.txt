@@ -1,0 +1,102 @@
+/* =========================================================
+SIMULATE DAILY CHANGES
+Run BEFORE generating incremental JSON
+========================================================= */
+
+------------------------------------------------------------
+-- POLICY CHANGES
+------------------------------------------------------------
+
+-- INSERT NEW POLICY
+INSERT INTO policy_info
+(
+    policy_id,
+    quotation_id,
+    customer_id,
+    provider_code,
+    policy_number,
+    policy_start_date,
+    policy_end_date,
+    policy_status,
+    premium_amount,
+    issued_date
+)
+VALUES
+(
+    'POL900001',
+    'QUO900001',
+    'CUS001001',
+    'PVI',
+    'PVI-2026-900001',
+    '2026-05-26',
+    '2027-05-25',
+    'ACTIVE',
+    14500000,
+    '2026-05-26'
+);
+
+
+-- UPDATE EXISTING POLICY
+UPDATE policy_info
+SET
+    policy_status = 'CANCELLED'
+WHERE policy_id = 'POL00100';
+
+
+
+------------------------------------------------------------
+-- PAYMENT CHANGES
+------------------------------------------------------------
+
+-- INSERT NEW PAYMENT
+INSERT INTO payment
+(
+    payment_id,
+    policy_id,
+    payment_date,
+    payment_method,
+    payment_status,
+    payment_amount,
+    transaction_reference
+)
+VALUES
+(
+    'PAY900001',
+    'POL900001',
+    '2026-05-26',
+    'Bank Transfer',
+    'PAID',
+    14500000,
+    'TXN900001'
+);
+
+
+-- UPDATE EXISTING PAYMENT
+UPDATE payment
+SET
+    payment_status = 'FAILED'
+WHERE payment_id = 'PAY00200';
+
+
+
+------------------------------------------------------------
+-- CANCELLATION CHANGES
+------------------------------------------------------------
+
+-- INSERT NEW CANCELLATION
+INSERT INTO cancellation
+(
+    cancellation_id,
+    policy_id,
+    cancellation_date,
+    cancellation_reason,
+    refund_amount
+)
+VALUES
+(
+    'CAN900001',
+    'POL00100',
+    '2026-05-26',
+    'Customer Request',
+    5000000
+);

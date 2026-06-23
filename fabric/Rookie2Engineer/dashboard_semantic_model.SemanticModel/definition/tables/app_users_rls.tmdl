@@ -1,0 +1,48 @@
+table app_users_rls
+	lineageTag: cb5e44a8-f7a2-49b5-8c29-75a875b41c86
+	sourceLineageTag: [web].[app_users_rls]
+
+	column password
+		dataType: string
+		lineageTag: de27ff1c-bb15-4b57-b474-babfabda24bc
+		sourceLineageTag: password
+		summarizeBy: none
+		sourceColumn: password
+
+		annotation SummarizationSetBy = Automatic
+
+	column rls_level
+		dataType: int64
+		formatString: 0
+		lineageTag: cf543a0b-27d2-4ed0-a34a-6e7a657e8a3e
+		sourceLineageTag: rls_level
+		summarizeBy: sum
+		sourceColumn: rls_level
+
+		annotation SummarizationSetBy = Automatic
+
+	column access_value
+		dataType: string
+		lineageTag: 83298bda-0c3f-4420-a363-74fd4d35b2e2
+		sourceLineageTag: access_value
+		summarizeBy: none
+		sourceColumn: access_value
+
+		annotation SummarizationSetBy = Automatic
+
+	column user_mail
+		dataType: string
+		lineageTag: 05a19ac6-e563-4342-8754-c3083718e550
+		sourceLineageTag: user_mail
+		summarizeBy: none
+		sourceColumn: user_mail
+
+		annotation SummarizationSetBy = Automatic
+
+	partition app_users_rls = entity
+		mode: directLake
+		source
+			entityName: app_users_rls
+			schemaName: web
+			expressionSource: 'DirectLake - Rookie2Engineer_Warehouse'
+

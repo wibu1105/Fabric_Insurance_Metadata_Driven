@@ -1,0 +1,36 @@
+find_replace:
+
+# Workspace
+- find_value: $value_string_insert
+  replace_value:
+    test: "$workspace.$id"
+
+# Lakehouse runtime
+- find_value: $value_string_insert
+  replace_value:
+    test: "$items.Lakehouse.Rookie2Engineer_Lakehouse.$id"
+
+# Lakehouse logicalId
+- find_value: $value_string_insert
+  replace_value:
+    test: "$items.Lakehouse.Rookie2Engineer_Lakehouse.$id"
+
+# Warehouse runtime
+- find_value: $value_string_insert
+  replace_value:
+    test: "$items.Warehouse.Rookie2Engineer_Warehouse.$id"
+
+# Warehouse logicalId
+- find_value: $value_string_insert
+  replace_value:
+    test: "$items.Warehouse.Rookie2Engineer_Warehouse.$id"
+
+# SQLDatabase runtime
+- find_value: $value_string_insert
+  replace_value:
+    test: "$items.SQLDatabase.insurance_crm_db.$id"
+
+# SQLDatabase logicalId (UI/artifact form)
+- find_value: $value_string_insert
+  replace_value:
+    test: "$items.SQLDatabase.insurance_crm_db.$id"

@@ -1,0 +1,390 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Script",
+        "typeProperties": {
+          "scripts": [
+            {
+              "text": {
+                "value": "DECLARE @audit_batch_id VARCHAR(100) = '@{replace(string(pipeline().parameters.p_audit_batch_id), '''', '''''')}';\nDECLARE @target_layer VARCHAR(100) = 'bronze';\n\nSELECT\n    s.audit_batch_id,\n    b.batch_status,\n    s.audit_session_id,\n    s.pipeline_name,\n    s.session_status,\n    t.audit_table_session_id,\n    t.table_id,\n    t.layer_name,\n    t.load_type,\n    t.status AS table_status,\n    CAST(t.start_time AS VARCHAR(33)) AS start_time,\n    CAST(t.end_time AS VARCHAR(33)) AS end_time,\n    t.processed_rows,\n    CAST(t.created_at AS VARCHAR(33)) AS created_at,\n    CAST(t.updated_at AS VARCHAR(33)) AS updated_at,\n    c.source_system,\n    c.source_schema,\n    c.source_table,\n    c.source_watermark_column,\n    c.destination_system,\n    c.destination_schema,\n    c.destination_table,\n    c.primary_key_column\nFROM audit.audit_table_session_log t\nJOIN audit.audit_session_log s\n    ON t.audit_session_id = s.audit_session_id\nJOIN audit.audit_batch_log b\n    ON s.audit_batch_id = b.audit_batch_id\nJOIN cfg.cfg_landing_bronze_table c\n    ON t.table_id = c.table_id\nWHERE s.audit_batch_id = @audit_batch_id\n  AND LOWER(t.layer_name) = LOWER(@target_layer)\n  AND LOWER(t.status) NOT IN ('succeeded', 'success')\n  AND c.is_active = 1\n  AND LOWER(c.destination_schema) = LOWER(@target_layer)\nORDER BY COALESCE(t.updated_at, t.created_at, t.start_time), t.table_id;",
+                "type": "Expression"
+              },
+              "type": "Query"
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 3,
+          "retryIntervalInSeconds": 180,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL_Get_Failed_Bronze_Tables",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@activity('SQL_Get_Failed_Bronze_Tables').output.resultSets[0].rows",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "53c18df5-8d9e-83f8-42c9-d6771e4dfd39",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "source_system": {
+                    "value": {
+                      "value": "@item().source_system",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "source_schema": {
+                    "value": {
+                      "value": "@item().source_schema",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "source_table": {
+                    "value": {
+                      "value": "@item().source_table",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "load_type": {
+                    "value": {
+                      "value": "@item().load_type",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "watermark_column": {
+                    "value": {
+                      "value": "@item().source_watermark_column",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "last_watermark_value": {
+                    "value": "1900-01-01",
+                    "type": "string"
+                  },
+                  "table_id": {
+                    "value": {
+                      "value": "@string(item().table_id)",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "audit_table_session_id": {
+                    "value": {
+                      "value": "@item().audit_table_session_id",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "1:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 180,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "NB_Copy_Data_To_Bronze",
+              "dependsOn": []
+            },
+            {
+              "type": "Script",
+              "typeProperties": {
+                "scripts": [
+                  {
+                    "text": {
+                      "value": "DECLARE @processed_rows INT = COALESCE(TRY_CAST('@{replace(string(activity('NB_Copy_Data_To_Bronze').output.result.exitValue), '''', '''''')}' AS INT), 0);\n\nEXEC audit.sp_audit_table_session_log\n    @action = 'success',\n    @audit_table_session_id = '@{replace(string(item().audit_table_session_id), '''', '''''')}',\n    @processed_rows = @processed_rows;",
+                      "type": "Expression"
+                    },
+                    "type": "NonQuery"
+                  }
+                ],
+                "scriptBlockExecutionTimeout": "02:00:00"
+              },
+              "linkedService": {
+                "name": "Rookie2Engineer_Warehouse",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                    "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "1:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 180,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "SP_Update_Recovered_Table_Success",
+              "dependsOn": [
+                {
+                  "activity": "NB_Copy_Data_To_Bronze",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Script",
+              "typeProperties": {
+                "scripts": [
+                  {
+                    "text": {
+                      "value": "EXEC audit.sp_insert_error_log\n    @audit_table_session_id = '@{replace(string(item().audit_table_session_id), '''', '''''')}',\n    @step_name = 'NB_Copy_Data_To_Bronze',\n    @error_code = '@{replace(string(activity('NB_Copy_Data_To_Bronze').error.errorCode), '''', '''''')}',\n    @error_name = '@{replace(string(activity('NB_Copy_Data_To_Bronze').error.message), '''', '''''')}';",
+                      "type": "Expression"
+                    },
+                    "type": "NonQuery"
+                  }
+                ],
+                "scriptBlockExecutionTimeout": "02:00:00"
+              },
+              "linkedService": {
+                "name": "Rookie2Engineer_Warehouse",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                    "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 180,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "SP_Insert_Recovery_Error_Log",
+              "dependsOn": [
+                {
+                  "activity": "NB_Copy_Data_To_Bronze",
+                  "dependencyConditions": [
+                    "Failed"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Script",
+              "typeProperties": {
+                "scripts": [
+                  {
+                    "text": {
+                      "value": "EXEC audit.sp_audit_table_session_log\n    @action = 'failed',\n    @audit_table_session_id = '@{replace(string(item().audit_table_session_id), '''', '''''')}';",
+                      "type": "Expression"
+                    },
+                    "type": "NonQuery"
+                  }
+                ],
+                "scriptBlockExecutionTimeout": "02:00:00"
+              },
+              "linkedService": {
+                "name": "Rookie2Engineer_Warehouse",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                    "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 180,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "SP_Update_Recovered_Table_Failed",
+              "dependsOn": [
+                {
+                  "activity": "SP_Insert_Recovery_Error_Log",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Fail",
+              "typeProperties": {
+                "message": {
+                  "value": "@concat('Bronze recovery failed for table_id=', string(item().table_id), ', audit_table_session_id=', item().audit_table_session_id)",
+                  "type": "Expression"
+                },
+                "errorCode": "BRONZE_RECOVERY_TABLE_FAILED"
+              },
+              "name": "Fail_Recovered_Table_Load",
+              "dependsOn": [
+                {
+                  "activity": "SP_Update_Recovered_Table_Failed",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": "FE_Recover_Failed_Bronze_Tables",
+        "dependsOn": [
+          {
+            "activity": "SQL_Get_Failed_Bronze_Tables",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Script",
+        "typeProperties": {
+          "scripts": [
+            {
+              "text": {
+                "value": "DECLARE @audit_batch_id VARCHAR(100) = '@{replace(string(pipeline().parameters.p_audit_batch_id), '''', '''''')}';\nDECLARE @target_layer VARCHAR(100) = 'bronze';\n\nUPDATE s\nSET\n    session_status = 'success',\n    session_end = CURRENT_TIMESTAMP\nFROM audit.audit_session_log s\nWHERE s.audit_batch_id = @audit_batch_id\n  AND EXISTS (\n      SELECT 1\n      FROM audit.audit_table_session_log t\n      JOIN cfg.cfg_landing_bronze_table c\n          ON t.table_id = c.table_id\n      WHERE t.audit_session_id = s.audit_session_id\n        AND LOWER(t.layer_name) = LOWER(@target_layer)\n        AND c.is_active = 1\n        AND LOWER(c.destination_schema) = LOWER(@target_layer)\n      GROUP BY t.audit_session_id\n      HAVING SUM(CASE WHEN LOWER(t.status) NOT IN ('succeeded', 'success') THEN 1 ELSE 0 END) = 0\n  );\n\nIF NOT EXISTS (\n    SELECT 1\n    FROM audit.audit_table_session_log t\n    JOIN audit.audit_session_log s\n        ON t.audit_session_id = s.audit_session_id\n    JOIN cfg.cfg_landing_bronze_table c\n        ON t.table_id = c.table_id\n    WHERE s.audit_batch_id = @audit_batch_id\n      AND LOWER(t.layer_name) = LOWER(@target_layer)\n      AND c.is_active = 1\n      AND LOWER(c.destination_schema) = LOWER(@target_layer)\n      AND LOWER(t.status) NOT IN ('succeeded', 'success')\n)\nBEGIN\n    EXEC audit.sp_audit_batch_log\n        @action = 'success',\n        @audit_batch_id = @audit_batch_id;\nEND;",
+                "type": "Expression"
+              },
+              "type": "NonQuery"
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 3,
+          "retryIntervalInSeconds": 180,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL_Refresh_Parent_Status_On_Success",
+        "dependsOn": [
+          {
+            "activity": "FE_Recover_Failed_Bronze_Tables",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Script",
+        "typeProperties": {
+          "scripts": [
+            {
+              "text": {
+                "value": "DECLARE @audit_batch_id VARCHAR(100) = '@{replace(string(pipeline().parameters.p_audit_batch_id), '''', '''''')}';\nDECLARE @target_layer VARCHAR(100) = 'bronze';\n\nUPDATE s\nSET\n    session_status = 'success',\n    session_end = CURRENT_TIMESTAMP\nFROM audit.audit_session_log s\nWHERE s.audit_batch_id = @audit_batch_id\n  AND EXISTS (\n      SELECT 1\n      FROM audit.audit_table_session_log t\n      JOIN cfg.cfg_landing_bronze_table c\n          ON t.table_id = c.table_id\n      WHERE t.audit_session_id = s.audit_session_id\n        AND LOWER(t.layer_name) = LOWER(@target_layer)\n        AND c.is_active = 1\n        AND LOWER(c.destination_schema) = LOWER(@target_layer)\n      GROUP BY t.audit_session_id\n      HAVING SUM(CASE WHEN LOWER(t.status) NOT IN ('succeeded', 'success') THEN 1 ELSE 0 END) = 0\n  );\n\nIF NOT EXISTS (\n    SELECT 1\n    FROM audit.audit_table_session_log t\n    JOIN audit.audit_session_log s\n        ON t.audit_session_id = s.audit_session_id\n    JOIN cfg.cfg_landing_bronze_table c\n        ON t.table_id = c.table_id\n    WHERE s.audit_batch_id = @audit_batch_id\n      AND LOWER(t.layer_name) = LOWER(@target_layer)\n      AND c.is_active = 1\n      AND LOWER(c.destination_schema) = LOWER(@target_layer)\n      AND LOWER(t.status) NOT IN ('succeeded', 'success')\n)\nBEGIN\n    EXEC audit.sp_audit_batch_log\n        @action = 'success',\n        @audit_batch_id = @audit_batch_id;\nEND;",
+                "type": "Expression"
+              },
+              "type": "NonQuery"
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 3,
+          "retryIntervalInSeconds": 180,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL_Refresh_Parent_Status_On_Failed",
+        "dependsOn": [
+          {
+            "activity": "FE_Recover_Failed_Bronze_Tables",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Fail",
+        "typeProperties": {
+          "message": "One or more bronze recovery table loads failed. Check audit_table_session_log and audit_error_log.",
+          "errorCode": "BRONZE_RECOVERY_FAILED"
+        },
+        "name": "Fail_Bronze_Recovery_Not_All_Tables_Succeeded",
+        "dependsOn": [
+          {
+            "activity": "SQL_Refresh_Parent_Status_On_Failed",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "p_audit_batch_id": {
+        "type": "string",
+        "defaultValue": "BATCH_MANUAL_20260601"
+      }
+    }
+  }
+}

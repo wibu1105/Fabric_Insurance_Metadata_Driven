@@ -1,0 +1,49 @@
+table dimpaymenttype
+	lineageTag: 9a209f94-79a6-44b1-918c-836addd0ff1e
+	sourceLineageTag: [gold].[dimpaymenttype]
+
+	column payment_type_key
+		dataType: int64
+		formatString: 0
+		lineageTag: cfd65821-991b-4fb7-be85-5cd147e86fcc
+		sourceLineageTag: payment_type_key
+		summarizeBy: none
+		sourceColumn: payment_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_method
+		dataType: string
+		lineageTag: 809664c7-8427-4b99-ac96-8b2dbf3a5e59
+		sourceLineageTag: payment_method
+		summarizeBy: none
+		sourceColumn: payment_method
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_description
+		dataType: string
+		lineageTag: 5abba98e-6b72-4a86-9ea4-df8aff582872
+		sourceLineageTag: payment_description
+		summarizeBy: none
+		sourceColumn: payment_description
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_deleted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 581c32ce-434c-41eb-ad52-1e354f1721ce
+		sourceLineageTag: is_deleted
+		summarizeBy: none
+		sourceColumn: is_deleted
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimpaymenttype = entity
+		mode: directLake
+		source
+			entityName: dimpaymenttype
+			schemaName: gold
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

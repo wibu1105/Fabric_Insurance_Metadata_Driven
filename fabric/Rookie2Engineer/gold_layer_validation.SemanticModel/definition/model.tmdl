@@ -1,0 +1,37 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["DirectLake - Rookie2Engineer_Lakehouse","DirectLake - Rookie2Engineer_Warehouse"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DirectLakeOnOneLakeInWeb","WebModelingEdit"]
+
+ref table dq_grain_summary
+ref table dq_pk_null_summary
+ref table dq_fk_integrity_summary
+ref table dq_pk_duplicate_summary
+ref table dq_scd_validation_summary
+ref table _measure
+ref table dimdate
+ref table factpolicy
+ref table dimquotationinfo
+ref table dimvehicle
+ref table factcancellation
+ref table dimprovider
+ref table factquotationitem
+ref table dimagent
+ref table dimcustomer
+ref table dimpaymenttype
+ref table factpayment
+ref table dimpolicyinfo
+ref table validationresults
+ref table dashboard_validation
+ref table audit_batch_log
+ref table 'Validation Status Filter'
+

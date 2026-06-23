@@ -1,0 +1,131 @@
+table factquotationitem
+	lineageTag: ab146feb-0150-4052-bcf4-f11e9b483ba1
+	sourceLineageTag: [gold].[factquotationitem]
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 0d8e5586-8d34-4d89-b018-e1acea123ec3
+		sourceLineageTag: customer_key
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_key
+		dataType: int64
+		formatString: 0
+		lineageTag: e75d5bb7-26c8-4a78-b854-6c7ceb38254b
+		sourceLineageTag: agent_key
+		summarizeBy: sum
+		sourceColumn: agent_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column provider_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 06b3d45b-1e9d-4127-9747-586d84b5738b
+		sourceLineageTag: provider_key
+		summarizeBy: none
+		sourceColumn: provider_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column coverage_type
+		dataType: string
+		lineageTag: 74c07f31-3ebf-4917-aca2-7212c2403e70
+		sourceLineageTag: coverage_type
+		summarizeBy: none
+		sourceColumn: coverage_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column quotation_info_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 33a13d66-29b9-4e39-a2d5-dfa7a183456f
+		sourceLineageTag: quotation_info_key
+		summarizeBy: none
+		sourceColumn: quotation_info_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column quotation_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: c64ac30e-e7d9-43ac-969c-a59135ac51df
+		sourceLineageTag: quotation_date_key
+		summarizeBy: none
+		sourceColumn: quotation_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column quotation_expiry_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: fcc23a37-b07d-4a0c-8720-69cd18e183d5
+		sourceLineageTag: quotation_expiry_date
+		summarizeBy: none
+		sourceColumn: quotation_expiry_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column quotation_status
+		dataType: string
+		lineageTag: 6fe0336c-2da6-4173-b3c9-aceeb05e0deb
+		sourceLineageTag: quotation_status
+		summarizeBy: none
+		sourceColumn: quotation_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column quotation_premium_amount
+		dataType: double
+		lineageTag: bc22b6f1-367f-4771-b451-84ca74edf744
+		sourceLineageTag: quotation_premium_amount
+		summarizeBy: sum
+		sourceColumn: quotation_premium_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column quotation_item_id
+		dataType: string
+		lineageTag: 65812149-09c0-4c80-8983-33898ae98d7b
+		sourceLineageTag: quotation_item_id
+		summarizeBy: none
+		sourceColumn: quotation_item_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column coverage_amount
+		dataType: double
+		lineageTag: 424bc673-da1c-44db-9266-78ff4bf000da
+		sourceLineageTag: coverage_amount
+		summarizeBy: sum
+		sourceColumn: coverage_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column deductible_amount
+		dataType: double
+		lineageTag: a22430e1-c80d-4972-9249-ee87bee08f54
+		sourceLineageTag: deductible_amount
+		summarizeBy: sum
+		sourceColumn: deductible_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition factquotationitem = entity
+		mode: directLake
+		source
+			entityName: factquotationitem
+			schemaName: gold
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

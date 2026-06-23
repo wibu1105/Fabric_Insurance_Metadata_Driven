@@ -1,0 +1,44 @@
+table silvervalidationresults
+	lineageTag: efda58f2-715b-4bcf-80cc-426d11c6d812
+	sourceLineageTag: [validate].[silvervalidationresults]
+
+	column validation_type
+		dataType: string
+		lineageTag: 24bfe674-621b-4579-a44f-fff72a045960
+		sourceLineageTag: validation_type
+		summarizeBy: none
+		sourceColumn: validation_type
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column check_item
+		dataType: string
+		lineageTag: 02be4457-13a8-45f6-82ae-e3dfa706d6ac
+		sourceLineageTag: check_item
+		summarizeBy: none
+		sourceColumn: check_item
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: 25ca9217-82c5-4e80-8ae1-a4c6d013e053
+		sourceLineageTag: status
+		summarizeBy: none
+		sourceColumn: status
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition silvervalidationresults = entity
+		mode: directLake
+		source
+			entityName: silvervalidationresults
+			schemaName: validate
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

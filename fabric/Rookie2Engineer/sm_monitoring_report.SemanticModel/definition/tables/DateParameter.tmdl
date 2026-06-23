@@ -1,0 +1,47 @@
+table DateParameter
+	lineageTag: 90000062-5368-4620-876a-c1e2099de980
+
+	column Period
+		lineageTag: 6918053e-b3ea-497c-b73a-e1d6ec38a76e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Period]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Days
+		formatString: 0
+		lineageTag: 889c65e5-0201-4c7f-9ea5-cfd3efa09948
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Days]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Order
+		formatString: 0
+		lineageTag: 2c921233-cd7b-430f-99d3-c46907ddf420
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DateParameter = calculated
+		mode: import
+		source =
+				
+				DATATABLE (
+				    "Period", STRING,
+				    "Days", INTEGER,
+				    "Order", INTEGER,
+				    {
+				        {"Last 7 Days", 7, 1},
+				        {"Last 14 Days", 14, 2},
+				        {"Last 30 Days", 30, 3},
+				        {"All Time", 9999, 4}
+				    }
+				)
+
+	annotation PBI_Id = 1131776f5eca49e891af6fa9178dc82e
+

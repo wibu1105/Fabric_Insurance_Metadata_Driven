@@ -1,0 +1,84 @@
+relationship 6a4be79f-b474-ecde-8bef-31e27653296b
+	fromColumn: dimvehicle.customer_key
+	toColumn: dimcustomer.customer_key
+
+relationship 33ca82a8-a5c5-b3b4-c461-181b099f78a1
+	fromColumn: factcancellation.agent_key
+	toColumn: dimagent.agent_key
+
+relationship 702bf11e-1b25-fcd4-05e2-75bb668b95c7
+	fromColumn: factcancellation.cancellation_date_key
+	toColumn: dimdate.date_key
+
+relationship d0e40887-820a-30cf-3592-93afb6dbd029
+	fromColumn: factcancellation.customer_key
+	toColumn: dimcustomer.customer_key
+
+relationship b7dfe5ce-f296-842b-fd9b-54a41e7663b3
+	fromColumn: factcancellation.provider_key
+	toColumn: dimprovider.provider_key
+
+relationship e004433c-912a-d397-d42f-2b67892d236a
+	fromColumn: factpayment.agent_key
+	toColumn: dimagent.agent_key
+
+relationship b3ef7680-a21f-cedf-e6a3-c6e891784128
+	fromColumn: factpayment.customer_key
+	toColumn: dimcustomer.customer_key
+
+relationship 654670c4-fb0b-6ff8-7848-ea1b4e5e7644
+	fromColumn: factpayment.payment_date_key
+	toColumn: dimdate.date_key
+
+relationship a46f04d4-79ed-8a7c-5cc5-5df996ada442
+	fromColumn: factpayment.payment_type_key
+	toColumn: dimpaymenttype.payment_type_key
+
+relationship 7d54fd04-ce58-01c7-e6a0-ae2fba639ecc
+	fromColumn: factpayment.policy_info_key
+	toColumn: dimpolicyinfo.policy_info_key
+
+relationship 2726cf28-41b5-b0ec-4a00-50543b660e63
+	fromColumn: factpayment.provider_key
+	toColumn: dimprovider.provider_key
+
+relationship b5641e25-6836-e0e7-70d2-7e1a253f8384
+	fromColumn: factpolicy.agent_key
+	toColumn: dimagent.agent_key
+
+relationship 7d052b63-a315-ba8f-7be8-4fedbb6b9614
+	fromColumn: factpolicy.customer_key
+	toColumn: dimcustomer.customer_key
+
+relationship 04c9c540-6791-3c42-94b7-d69d45192969
+	fromColumn: factpolicy.issue_date_key
+	toColumn: dimdate.date_key
+
+relationship 200f208a-adc6-474b-3c5f-5753b3e252c2
+	fromColumn: factpolicy.policy_info_key
+	toColumn: dimpolicyinfo.policy_info_key
+
+relationship 608ea83c-c7d1-51eb-881c-24d325b08da2
+	fromColumn: factpolicy.provider_key
+	toColumn: dimprovider.provider_key
+
+relationship 647accab-2400-6077-6404-8cbeea79d64a
+	fromColumn: factpolicy.quotation_info_key
+	toColumn: dimquotationinfo.quotation_info_key
+
+relationship 1ed627cb-7b2d-7d84-1f41-d1fa1f60c52c
+	fromColumn: factquotationitem.quotation_info_key
+	toColumn: dimquotationinfo.quotation_info_key
+
+relationship 02c7a7fb-4e46-8130-90bf-0ada100760eb
+	fromColumn: factquotationitem.customer_key
+	toColumn: dimcustomer.customer_key
+
+relationship 78fa4f17-c554-61bc-f863-dc53bc6d3845
+	fromColumn: factquotationitem.provider_key
+	toColumn: dimprovider.provider_key
+
+relationship 114b9b1b-efcf-0022-a7c0-bdc4ea2f4a4e
+	fromColumn: factquotationitem.quotation_date_key
+	toColumn: dimdate.date_key
+

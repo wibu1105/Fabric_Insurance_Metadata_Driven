@@ -1,0 +1,151 @@
+table bronze_silver_rowcount_reconciliation
+	lineageTag: 179d5bf0-3946-4956-9e12-41740a32fe9a
+	sourceLineageTag: [validate].[bronze_silver_rowcount_reconciliation]
+
+	column table_name
+		dataType: string
+		lineageTag: 694e066e-d4ef-472a-b695-75f64a9f758c
+		sourceLineageTag: table_name
+		summarizeBy: none
+		sourceColumn: table_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column key_column
+		dataType: string
+		lineageTag: 267e480a-c499-44ce-b3ab-79f5c831e817
+		sourceLineageTag: key_column
+		summarizeBy: none
+		sourceColumn: key_column
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column bronze_row_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 39906f6f-4612-48a4-b665-5e8ed48b926a
+		sourceLineageTag: bronze_row_count
+		summarizeBy: sum
+		sourceColumn: bronze_row_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column bronze_distinct_key_count
+		dataType: int64
+		formatString: 0
+		lineageTag: c7e5c975-f075-42e0-9789-d1f726bc4469
+		sourceLineageTag: bronze_distinct_key_count
+		summarizeBy: sum
+		sourceColumn: bronze_distinct_key_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column bronze_blank_key_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 3606e6a3-6c43-43f1-9461-c87a3f902467
+		sourceLineageTag: bronze_blank_key_count
+		summarizeBy: sum
+		sourceColumn: bronze_blank_key_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column silver_row_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 0e43487a-24fa-4e85-94eb-c285d97ab3c0
+		sourceLineageTag: silver_row_count
+		summarizeBy: sum
+		sourceColumn: silver_row_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column silver_distinct_key_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 072dcf44-678a-4d91-b371-598224b1a95e
+		sourceLineageTag: silver_distinct_key_count
+		summarizeBy: sum
+		sourceColumn: silver_distinct_key_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column silver_blank_key_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 9a5c8275-12b1-4ff6-bcb5-2c5d82550f0e
+		sourceLineageTag: silver_blank_key_count
+		summarizeBy: sum
+		sourceColumn: silver_blank_key_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column silver_minus_bronze_distinct_keys
+		dataType: int64
+		formatString: 0
+		lineageTag: 057e0ead-3633-45db-a2cc-f2d841310b64
+		sourceLineageTag: silver_minus_bronze_distinct_keys
+		summarizeBy: sum
+		sourceColumn: silver_minus_bronze_distinct_keys
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column silver_duplicate_rows
+		dataType: int64
+		formatString: 0
+		lineageTag: 09941026-8f89-4be9-a55b-54be71c68b39
+		sourceLineageTag: silver_duplicate_rows
+		summarizeBy: sum
+		sourceColumn: silver_duplicate_rows
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column check_note
+		dataType: string
+		lineageTag: 73dfb791-1e74-4889-9074-7b425b99c025
+		sourceLineageTag: check_note
+		summarizeBy: none
+		sourceColumn: check_note
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: 5462902c-205c-48ff-8761-78e58b1e6d7e
+		sourceLineageTag: status
+		summarizeBy: none
+		sourceColumn: status
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition bronze_silver_rowcount_reconciliation = entity
+		mode: directLake
+		source
+			entityName: bronze_silver_rowcount_reconciliation
+			schemaName: validate
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

@@ -1,0 +1,74 @@
+table dimprovider
+	lineageTag: e374e31a-6b3e-40d7-a795-25d145bae147
+	sourceLineageTag: 373deed6-a683-4aef-ab37-d965fa8cf5f6
+
+	column provider_key
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		lineageTag: 72026549-3782-4b5e-b6b4-b94b67d24b07
+		sourceLineageTag: 753ca601-cb35-407e-b124-12e1f6b63454
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: provider_key
+
+		annotation SummarizationSetBy = User
+
+	column provider_code
+		dataType: string
+		lineageTag: a743ace2-899c-47c6-a273-3fa93ecc39a8
+		sourceLineageTag: 551d94b6-3c55-4f9c-8400-228a78e9227c
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: provider_code
+
+		annotation SummarizationSetBy = User
+
+	column provider_name
+		dataType: string
+		lineageTag: 78cf515e-4384-4157-bb36-70e02d8aee05
+		sourceLineageTag: 39b4c19b-e073-4e8c-bb10-4f7468d181de
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: provider_name
+
+		annotation SummarizationSetBy = User
+
+	column provider_group
+		dataType: string
+		lineageTag: 89d75ffb-e21f-4bc3-a168-dd23bd3d6340
+		sourceLineageTag: 280ecac2-3ee9-4fc7-9152-f9ff9ea09789
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: provider_group
+
+		annotation SummarizationSetBy = User
+
+	column active_flag
+		dataType: int64
+		formatString: 0
+		lineageTag: 12d857cf-0000-449b-9f26-bfc2762ef8c0
+		sourceLineageTag: 841684bf-6f39-40f4-b9db-0702b2d08342
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: active_flag
+
+		annotation SummarizationSetBy = User
+
+	column is_deleted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 95f0bb55-69e2-4b2b-b4c3-5b79856e678f
+		sourceLineageTag: 6c23551f-698d-4ea3-9cbb-9e2e03b7a1f6
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: is_deleted
+
+		annotation SummarizationSetBy = User
+
+	partition dimprovider = entity
+		mode: directQuery
+		source
+			entityName: dimprovider
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

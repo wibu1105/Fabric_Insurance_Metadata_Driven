@@ -1,0 +1,38 @@
+table DimLayer
+	lineageTag: d22cadec-68ca-4731-bf2d-eeedb14dc1cf
+
+	column layer_name
+		lineageTag: d4221aa0-04d5-49f1-98ed-8fb760771c77
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [layer_name]
+		sortByColumn: Order
+
+		annotation SummarizationSetBy = Automatic
+
+	column Order
+		formatString: 0
+		lineageTag: d2e3b0f1-6c22-46c8-95bf-993ff420e652
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimLayer = calculated
+		mode: import
+		source =
+				
+				DATATABLE (
+				    "layer_name", STRING,
+				    "Order", INTEGER,
+				    {
+				        {"landing", 1},
+				        {"bronze", 2},
+				        {"silver", 3},
+				        {"gold", 4}
+				    }
+				)
+
+	annotation PBI_Id = e6d53d0464214e86a8ffc3c2291236c5
+

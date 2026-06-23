@@ -1,0 +1,75 @@
+table dimpolicyinfo
+	lineageTag: 7614c81e-a00b-4117-a298-f3d3c1c387b7
+	sourceLineageTag: 1944932a-82af-43ae-ad4d-e2dfd8d64290
+
+	column policy_info_key
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		lineageTag: b9f76d51-6e35-4d4f-ab6e-3be9aa06b6a6
+		sourceLineageTag: 9a6b9c4b-f14e-4d53-95cb-58c009c165af
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: policy_info_key
+
+		annotation SummarizationSetBy = User
+
+	column policy_id
+		dataType: string
+		lineageTag: 1eae29c2-cc25-451c-b44c-c08ce8faea90
+		sourceLineageTag: 4f98b205-dd11-45b6-960d-d8cc7d629baa
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: policy_id
+
+		annotation SummarizationSetBy = User
+
+	column policy_number
+		dataType: string
+		lineageTag: 3b869cde-d307-4620-ae8a-cf60d94f41ec
+		sourceLineageTag: 8d60f196-31ad-4927-b31e-f0f385c7b868
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: policy_number
+
+		annotation SummarizationSetBy = User
+
+	column policy_start_date
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: a13a2037-b67b-43f1-a843-0c03cde2e63d
+		sourceLineageTag: 1dcefced-0f8d-499f-9de2-40114a80a080
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: policy_start_date
+
+		annotation SummarizationSetBy = User
+
+	column policy_end_date
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: 89247448-3377-439a-95b9-f38d4a42e816
+		sourceLineageTag: b651b0df-2564-4f99-9f97-a6345ad1017a
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: policy_end_date
+
+		annotation SummarizationSetBy = User
+
+	column is_deleted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c9bdcdde-3103-4a0c-b4e9-1bd95a155ada
+		sourceLineageTag: c908bccd-c41f-453f-8d34-533ebb386feb
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: is_deleted
+
+		annotation SummarizationSetBy = User
+
+	partition dimpolicyinfo = entity
+		mode: directQuery
+		source
+			entityName: dimpolicyinfo
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

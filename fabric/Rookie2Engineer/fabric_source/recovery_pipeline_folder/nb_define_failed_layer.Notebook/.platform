@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_define_failed_layer"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "54bd6185-e4b5-8220-4cfb-fbee0e68e110"
+  }
+}

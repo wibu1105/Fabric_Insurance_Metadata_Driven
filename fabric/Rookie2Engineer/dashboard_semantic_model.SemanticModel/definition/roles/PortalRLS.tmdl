@@ -1,0 +1,73 @@
+role PortalRLS
+	modelPermission: read
+
+	tablePermission dimagent =
+			VAR CurrentUser =
+			    LOWER(USERPRINCIPALNAME())
+			
+			VAR UserLevel =
+			    LOOKUPVALUE(
+			        app_users_rls[rls_level],
+			        app_users_rls[user_mail],
+			        CurrentUser
+			    )
+			
+			VAR AccessValue =
+			    LOOKUPVALUE(
+			        app_users_rls[access_value],
+			        app_users_rls[user_mail],
+			        CurrentUser
+			    )
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			
+			    UserLevel = 1,
+			    TRUE(),
+			
+			    UserLevel = 2,
+			    dimAgent[agent_id] = AccessValue,
+			
+			    UserLevel = 3,
+			    TRUE(),
+			
+			    FALSE()
+			)
+
+	tablePermission dimprovider =
+			VAR CurrentUser =
+			    LOWER(USERPRINCIPALNAME())
+			
+			VAR UserLevel =
+			    LOOKUPVALUE(
+			        app_users_rls[rls_level],
+			        app_users_rls[user_mail],
+			        CurrentUser
+			    )
+			
+			VAR AccessValue =
+			    LOOKUPVALUE(
+			        app_users_rls[access_value],
+			        app_users_rls[user_mail],
+			        CurrentUser
+			    )
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			
+			    UserLevel = 1,
+			    TRUE(),
+			
+			    UserLevel = 2,
+			    TRUE(),
+			
+			    UserLevel = 3,
+			    dimProvider[provider_code] = AccessValue,
+			
+			    FALSE()
+			)
+
+	annotation PBI_Id = 9cd5b74eb8734ebeb40823f7668831d2
+

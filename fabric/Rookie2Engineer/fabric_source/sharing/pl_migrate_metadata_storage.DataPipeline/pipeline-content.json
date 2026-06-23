@@ -1,0 +1,151 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Script",
+        "typeProperties": {
+          "scripts": [
+            {
+              "text": {
+                "value": "-- (select \n--     'audit' as metadata_schema,\n--     'audit_batch_log' as metadata_table,\n--     'audit_batch_id' as primary_key)\n-- UNION ALL\n-- (select \n--     'audit' as metadata_schema,\n--     'audit_session_log' as metadata_table,\n--     'audit_session_id' as primary_key)\n-- UNION ALL\n-- (select \n--     'audit' as metadata_schema,\n--     'audit_table_session_log' as metadata_table,\n--     'audit_table_session_id' as primary_key)\n-- UNION ALL\n(select \n    'audit' as metadata_schema,\n    'audit_error_log' as metadata_table,\n    'audit_error_id' as primary_key)\nUNION ALL\n(select \n    'audit' as metadata_schema,\n    'audit_invalid_record' as metadata_table,\n    'invalid_record_id' as primary_key)\n-- UNION ALL\n-- (select \n--     'cfg' as metadata_schema,\n--     'cfg_landing_bronze_table' as metadata_table,\n--     'table_id' as primary_key)\n-- UNION ALL\n-- (select \n--     'cfg' as metadata_schema,\n--     'cfg_silver_gold_table' as metadata_table,\n--     'table_id' as primary_key)\n-- UNION ALL\n-- (select \n--     'cfg' as metadata_schema,\n--     'cfg_table_watermark' as metadata_table,\n--     'table_id' as primary_key)",
+                "type": "Expression"
+              },
+              "type": "Query"
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Script1",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": false,
+          "batchCount": 3,
+          "items": {
+            "value": "@activity('Script1').output.resultSets[0].rows",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "LakehouseTableSource",
+                  "datasetSettings": {
+                    "type": "LakehouseTable",
+                    "typeProperties": {
+                      "schema": {
+                        "value": "@item().metadata_schema",
+                        "type": "Expression"
+                      },
+                      "table": {
+                        "value": "@item().metadata_table",
+                        "type": "Expression"
+                      }
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "Rookie2Engineer_Lakehouse",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "5003935f-2501-a066-4390-112c1abd17a2",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Tables"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "DataWarehouseSink",
+                  "allowCopyCommand": true,
+                  "copyCommandSettings": {},
+                  "writeBehavior": "Insert",
+                  "disableMetricsCollection": false,
+                  "datasetSettings": {
+                    "type": "DataWarehouseTable",
+                    "typeProperties": {
+                      "schema": {
+                        "value": "@item().metadata_schema",
+                        "type": "Expression"
+                      },
+                      "table": {
+                        "value": "@item().metadata_table",
+                        "type": "Expression"
+                      }
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "Rookie2Engineer_Warehouse",
+                      "properties": {
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                          "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                          "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                },
+                "enableStaging": true
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Copy data1",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "ForEach1",
+        "dependsOn": [
+          {
+            "activity": "Script1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

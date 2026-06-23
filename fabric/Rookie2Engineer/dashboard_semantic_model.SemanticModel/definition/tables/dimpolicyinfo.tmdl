@@ -1,0 +1,69 @@
+table dimpolicyinfo
+	lineageTag: 1944932a-82af-43ae-ad4d-e2dfd8d64290
+	sourceLineageTag: [gold].[dimpolicyinfo]
+
+	column policy_info_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 9a6b9c4b-f14e-4d53-95cb-58c009c165af
+		sourceLineageTag: policy_info_key
+		summarizeBy: none
+		sourceColumn: policy_info_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column policy_id
+		dataType: string
+		lineageTag: 4f98b205-dd11-45b6-960d-d8cc7d629baa
+		sourceLineageTag: policy_id
+		summarizeBy: none
+		sourceColumn: policy_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column policy_number
+		dataType: string
+		lineageTag: 8d60f196-31ad-4927-b31e-f0f385c7b868
+		sourceLineageTag: policy_number
+		summarizeBy: none
+		sourceColumn: policy_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column policy_start_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 1dcefced-0f8d-499f-9de2-40114a80a080
+		sourceLineageTag: policy_start_date
+		summarizeBy: none
+		sourceColumn: policy_start_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column policy_end_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: b651b0df-2564-4f99-9f97-a6345ad1017a
+		sourceLineageTag: policy_end_date
+		summarizeBy: none
+		sourceColumn: policy_end_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_deleted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c908bccd-c41f-453f-8d34-533ebb386feb
+		sourceLineageTag: is_deleted
+		summarizeBy: none
+		sourceColumn: is_deleted
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimpolicyinfo = entity
+		mode: directLake
+		source
+			entityName: dimpolicyinfo
+			schemaName: gold
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

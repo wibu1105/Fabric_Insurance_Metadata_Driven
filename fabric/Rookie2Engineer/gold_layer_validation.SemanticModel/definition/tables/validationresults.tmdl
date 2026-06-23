@@ -1,0 +1,38 @@
+table validationresults
+	lineageTag: 04879ce1-9c63-4964-a37c-acb6fe2cfa4d
+	sourceLineageTag: [validate].[validationresults]
+
+	column validation_type
+		dataType: string
+		lineageTag: bb3f6fa9-4c86-437b-ac3c-1d39addab7be
+		sourceLineageTag: validation_type
+		summarizeBy: none
+		sourceColumn: validation_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column check_item
+		dataType: string
+		lineageTag: 3fc7b325-ed2e-4498-9347-39a0e404a83b
+		sourceLineageTag: check_item
+		summarizeBy: none
+		sourceColumn: check_item
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: b78771ca-ed59-4454-9037-1f2bb2b827bc
+		sourceLineageTag: status
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition validationresults = entity
+		mode: directLake
+		source
+			entityName: validationresults
+			schemaName: validate
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

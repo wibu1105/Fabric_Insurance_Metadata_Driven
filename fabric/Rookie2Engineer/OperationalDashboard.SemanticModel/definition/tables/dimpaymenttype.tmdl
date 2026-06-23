@@ -1,0 +1,53 @@
+table dimpaymenttype
+	lineageTag: c59d18c9-4059-4a81-8ee1-5b62d00d9bf0
+	sourceLineageTag: 9a209f94-79a6-44b1-918c-836addd0ff1e
+
+	column payment_type_key
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		lineageTag: 6bb2ffa1-a0ac-4943-b1d5-fa767c7b4c6f
+		sourceLineageTag: cfd65821-991b-4fb7-be85-5cd147e86fcc
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: payment_type_key
+
+		annotation SummarizationSetBy = User
+
+	column payment_method
+		dataType: string
+		lineageTag: b0805dcc-7c2b-4aa7-81c0-a8b1c43b2106
+		sourceLineageTag: 809664c7-8427-4b99-ac96-8b2dbf3a5e59
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: payment_method
+
+		annotation SummarizationSetBy = User
+
+	column payment_description
+		dataType: string
+		lineageTag: 78bb1fff-a9ab-4c50-a61b-467e5edbf5ec
+		sourceLineageTag: 5abba98e-6b72-4a86-9ea4-df8aff582872
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: payment_description
+
+		annotation SummarizationSetBy = User
+
+	column is_deleted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2b75c966-485b-4525-830b-bcf57aa1e196
+		sourceLineageTag: 581c32ce-434c-41eb-ad52-1e354f1721ce
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: is_deleted
+
+		annotation SummarizationSetBy = User
+
+	partition dimpaymenttype = entity
+		mode: directQuery
+		source
+			entityName: dimpaymenttype
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

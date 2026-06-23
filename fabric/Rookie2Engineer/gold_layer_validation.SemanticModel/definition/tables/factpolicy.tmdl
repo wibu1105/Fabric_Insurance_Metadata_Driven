@@ -1,0 +1,91 @@
+table factpolicy
+	lineageTag: c91d6a36-d505-4775-8f90-d5f78924178b
+	sourceLineageTag: [gold].[factpolicy]
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 3eb39341-6d99-4b79-b9c9-6249a6437d9a
+		sourceLineageTag: customer_key
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 1830e44b-affd-4e35-8343-e22e2722fa8d
+		sourceLineageTag: agent_key
+		summarizeBy: none
+		sourceColumn: agent_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column provider_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 07a1f4b2-1f8b-4133-b2f9-f84d001f0c5c
+		sourceLineageTag: provider_key
+		summarizeBy: none
+		sourceColumn: provider_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column policy_info_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 93a53124-7b09-47e4-82f9-1dd0b3976dc8
+		sourceLineageTag: policy_info_key
+		summarizeBy: none
+		sourceColumn: policy_info_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column quotation_info_key
+		dataType: int64
+		formatString: 0
+		lineageTag: eba60032-bd84-47f5-b7f9-b7541bb521a9
+		sourceLineageTag: quotation_info_key
+		summarizeBy: none
+		sourceColumn: quotation_info_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column policy_status
+		dataType: string
+		lineageTag: 01b05431-9998-4dfd-ab03-c684d2b9a98f
+		sourceLineageTag: policy_status
+		summarizeBy: none
+		sourceColumn: policy_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column policy_premium_amount
+		dataType: double
+		lineageTag: 22ecae16-34f0-4729-8372-4b04622f83c3
+		sourceLineageTag: policy_premium_amount
+		summarizeBy: sum
+		sourceColumn: policy_premium_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column issue_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: e7d5994c-7811-48c5-9c98-a3e2c151def0
+		sourceLineageTag: issue_date_key
+		summarizeBy: none
+		sourceColumn: issue_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition factpolicy = entity
+		mode: directLake
+		source
+			entityName: factpolicy
+			schemaName: gold
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

@@ -1,0 +1,78 @@
+table dq_pk_duplicate_summary
+	lineageTag: cc004b1a-69ff-4e52-bb8b-6cd0d5e5a7d5
+	sourceLineageTag: [validate].[dq_pk_duplicate_summary]
+
+	measure 'PK Duplicate Status' =
+			
+			IF (
+			    SUM('dq_pk_duplicate_summary'[extra_duplicate_rows]) > 0,
+			    "Fail",
+			    "Pass"
+			)
+		lineageTag: 32cfd03e-3e0b-48e8-adeb-2fdc1efbe5c5
+
+		changedProperty = Name
+
+	column check_type
+		dataType: string
+		lineageTag: d49cc542-ae4e-421b-b224-99b29c4696fe
+		sourceLineageTag: check_type
+		summarizeBy: none
+		sourceColumn: check_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: bd1f6d39-85ee-4fb8-bc7e-2a23de70e588
+		sourceLineageTag: status
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column table_name
+		dataType: string
+		lineageTag: fd4f2854-6265-49ad-8d4c-d2b3a1ffa11a
+		sourceLineageTag: table_name
+		summarizeBy: none
+		sourceColumn: table_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column key_column
+		dataType: string
+		lineageTag: 860ece61-bb97-42eb-ba79-e48e9545b91d
+		sourceLineageTag: key_column
+		summarizeBy: none
+		sourceColumn: key_column
+
+		annotation SummarizationSetBy = Automatic
+
+	column duplicate_key_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 1a82d9fd-4143-4142-b18e-18c8acd37acd
+		sourceLineageTag: duplicate_key_count
+		summarizeBy: sum
+		sourceColumn: duplicate_key_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column extra_duplicate_rows
+		dataType: int64
+		formatString: 0
+		lineageTag: 20faf5e5-0650-42ba-8ae9-b929b822aa8e
+		sourceLineageTag: extra_duplicate_rows
+		summarizeBy: sum
+		sourceColumn: extra_duplicate_rows
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dq_pk_duplicate_summary = entity
+		mode: directLake
+		source
+			entityName: dq_pk_duplicate_summary
+			schemaName: validate
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

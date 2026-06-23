@@ -1,0 +1,986 @@
+table _measure
+	lineageTag: a5da2db7-a027-4629-9b2d-29e66bf5d0ee
+
+	measure 'Issue Policy' = ```
+			
+			VAR IssuedCount = 
+			    CALCULATE(
+			        DISTINCTCOUNT('FactPolicy'[policy_info_key])
+			        //'FactPolicy'[policy_status] = "ISSUED" 
+			    )
+			
+			RETURN
+			    COALESCE(IssuedCount, 0)
+			```
+		formatString: 0
+		lineageTag: 93fa3bed-9b47-404a-9651-9b2fcf610a06
+
+	measure 'Policies MoM % Growth' = ```
+			
+			
+			// --- 1. GET CURRENT METRIC ---
+			VAR CurrentPolicies = DISTINCTCOUNT('factpolicy'[policy_info_key])
+			
+			// --- 2. SAFELY GET PREVIOUS METRIC ---
+			VAR CurrentDate = MAX('dimdate'[full_date])
+			VAR PreviousDate = EDATE(CurrentDate, -1)
+			VAR TargetYear = YEAR(PreviousDate)
+			VAR TargetMonth = MONTH(PreviousDate)
+			
+			VAR LastMonthPolicies = 
+			    CALCULATE(
+			        DISTINCTCOUNT('factpolicy'[policy_info_key]),
+			        REMOVEFILTERS('dimdate'),
+			        'dimdate'[year_number] = TargetYear,
+			        'dimdate'[month_number] = TargetMonth
+			    )
+			
+			// --- 3. CALCULATE % GROWTH ---
+			RETURN
+			    DIVIDE(
+			        CurrentPolicies - LastMonthPolicies,
+			        LastMonthPolicies,
+			        BLANK()
+			    )
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 2c83151e-d44b-43a3-8687-b2d6b9917ed5
+
+	measure 'Last Batch Run Time' = ```
+			
+			VAR LatestSuccessBatch = 
+			    CALCULATE(
+			        MAX('audit_batch_log'[session_end]),
+			        'audit_batch_log'[batch_status] = "success"
+			    )
+			    
+			VAR LastSuccessTime = 
+			    IF(
+			        ISBLANK(LatestSuccessBatch),
+			        "No Successful Runs",
+			        FORMAT(LatestSuccessBatch, "dd-MMM-yyyy HH:mm:ss")
+			    )
+			
+			RETURN "Last Updated: " & LastSuccessTime
+			```
+		lineageTag: fe8a505b-18a7-4f6d-a278-6f47f692dda4
+
+	measure 'Payment Success Rate MoM % Growth' = ```
+			
+			// 1. Get the current rate
+			VAR CurrentSuccessRate = [Payment Success Rate]
+			
+			// 2. Safely get the previous month's rate
+			VAR CurrentDate = MAX('dimdate'[full_date])
+			VAR PreviousDate = EDATE(CurrentDate, -1)
+			VAR TargetYear = YEAR(PreviousDate)
+			VAR TargetMonth = MONTH(PreviousDate)
+			
+			VAR LastMonthSuccessRate = 
+			    CALCULATE(
+			        [Payment Success Rate],
+			        REMOVEFILTERS('dimdate'),
+			        'dimdate'[year_number] = TargetYear,
+			        'dimdate'[month_number] = TargetMonth
+			    )
+			
+			// 3. Calculate the relative growth
+			RETURN
+			    DIVIDE(
+			        CurrentSuccessRate - LastMonthSuccessRate,
+			        LastMonthSuccessRate,
+			        BLANK()
+			    )
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 13762444-902b-4397-a217-f31ebf19ac14
+
+	measure _measure
+		lineageTag: 8543ca67-4cee-4341-be4c-49998c16f696
+
+	measure 'Payment Success Rate' = ```
+			
+			VAR PaymentCount = DISTINCTCOUNT('FactPayment'[payment_id])
+			
+			VAR SuccessfulPaymentCount = 
+			    CALCULATE(
+			        DISTINCTCOUNT('FactPayment'[payment_id]),
+			        'FactPayment'[payment_status] = "PAID"
+			    )
+			
+			RETURN 
+			    DIVIDE(
+			        SuccessfulPaymentCount, 
+			        PaymentCount, 
+			        BLANK()
+			    )
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: b91559a5-5300-41bd-b70c-880b18a1265d
+
+	measure 'Active Policies' =
+			
+			VAR SelectedDate =
+			    MAX ( 'dimdate'[full_date] )
+			
+			VAR HasRestrictedDateSelection =
+			    ISCROSSFILTERED ( 'dimdate' )
+			
+			RETURN
+			IF (
+			    HasRestrictedDateSelection,
+			
+			    -- Case 1: Month-Year or date range selected.
+			    -- Count policies active as of the selected period end date.
+			    CALCULATE (
+			        COUNTROWS ( 'DimPolicyInfo' ),
+			        REMOVEFILTERS ( 'dimdate' ),
+			        'DimPolicyInfo'[is_deleted] = FALSE (),
+			        'DimPolicyInfo'[policy_start_date] <= SelectedDate,
+			        'DimPolicyInfo'[policy_end_date] >= SelectedDate
+			            || ISBLANK ( 'DimPolicyInfo'[policy_end_date] )
+			    ),
+			
+			    -- Case 2: Time slicer is All.
+			    -- Count policies whose current business status is ACTIVE.
+			    CALCULATE (
+			        DISTINCTCOUNT ( 'FactPolicy'[policy_info_key] ),
+			        REMOVEFILTERS ( 'dimdate' ),
+			        'DimPolicyInfo'[is_deleted] = FALSE (),
+			        'FactPolicy'[policy_status] = "ACTIVE"
+			    )
+			)
+		formatString: 0
+		lineageTag: c183254d-fd8f-47b1-8f1b-334c7eb1f582
+
+	measure 'Issue Policy MoM % Growth' = ```
+			
+			VAR CurrentIssued = [Issue Policy]
+			
+			VAR CurrentDate = MAX('dimdate'[full_date])
+			VAR PreviousDate = EDATE(CurrentDate, -1)
+			VAR TargetYear = YEAR(PreviousDate)
+			VAR TargetMonth = MONTH(PreviousDate)
+			
+			VAR LastMonthIssued = 
+			    CALCULATE(
+			        [Issue Policy],
+			        REMOVEFILTERS('dimdate'),
+			        'dimdate'[year_number] = TargetYear,
+			        'dimdate'[month_number] = TargetMonth
+			    )
+			
+			RETURN
+			    DIVIDE(CurrentIssued - LastMonthIssued, LastMonthIssued, BLANK())
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e90079b1-bd6f-4ddf-a28b-a42cf997dbbe
+
+	measure 'Active Policies MoM % Growth' =
+			
+			VAR HasRestrictedDateSelection =
+			    ISCROSSFILTERED ( 'dimdate' )
+			
+			VAR CurrentDate =
+			    MAX ( 'dimdate'[full_date] )
+			
+			VAR PreviousDate =
+			    EDATE ( CurrentDate, -1 )
+			
+			VAR CurrentActive =
+			    [Active Policies]
+			
+			VAR PreviousActive =
+			    CALCULATE (
+			        COUNTROWS ( 'DimPolicyInfo' ),
+			        REMOVEFILTERS ( 'dimdate' ),
+			        'DimPolicyInfo'[is_deleted] = FALSE (),
+			        'DimPolicyInfo'[policy_start_date] <= PreviousDate,
+			        'DimPolicyInfo'[policy_end_date] >= PreviousDate
+			            || ISBLANK ( 'DimPolicyInfo'[policy_end_date] )
+			    )
+			
+			RETURN
+			    IF (
+			        NOT HasRestrictedDateSelection,
+			        BLANK (),
+			        DIVIDE (
+			            CurrentActive - PreviousActive,
+			            PreviousActive,
+			            BLANK ()
+			        )
+			    )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6457420b-eaac-461b-b816-769163bd6ade
+
+	measure 'Paid Premium' =
+			
+			CALCULATE(
+			    SUM('FactPayment'[payment_amount]),
+			    'FactPayment'[payment_status] = "PAID"
+			)
+		formatString: #,0.00\ "₫";-#,0.00\ "₫";#,0.00\ "₫"
+		lineageTag: 7039d49c-b7eb-4b2a-9bdd-e48bce133e26
+
+		annotation PBI_FormatHint = {"currencyCulture":"vi-VN"}
+
+	measure 'Paid Premium MoM % Growth' = ```
+			
+			VAR CurrentPremium = [Paid Premium]
+			
+			// Safely target exactly one month prior
+			VAR CurrentDate = MAX('dimdate'[full_date])
+			VAR PreviousDate = EDATE(CurrentDate, -1)
+			VAR TargetYear = YEAR(PreviousDate)
+			VAR TargetMonth = MONTH(PreviousDate)
+			
+			VAR LastMonthPremium = 
+			    CALCULATE(
+			        [Paid Premium],
+			        REMOVEFILTERS('dimdate'),
+			        'dimdate'[year_number] = TargetYear,
+			        'dimdate'[month_number] = TargetMonth
+			    )
+			
+			RETURN
+			    DIVIDE(
+			        CurrentPremium - LastMonthPremium, 
+			        LastMonthPremium, 
+			        BLANK()
+			    )
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 789c83ed-750e-4447-a0c0-aa6206adcef8
+
+	measure 'Pending Payment' =
+			
+			CALCULATE(
+			    SUM('FactPayment'[payment_amount]),
+			    'FactPayment'[payment_status] = "PENDING"
+			)
+		formatString: #,0.00\ "₫";-#,0.00\ "₫";#,0.00\ "₫"
+		lineageTag: 34e1a103-bcc8-4df1-97d0-293eb33affe5
+
+		annotation PBI_FormatHint = {"currencyCulture":"vi-VN"}
+
+	measure 'Pending Payment MoM % Growth' = ```
+			
+			VAR CurrentVal = [Pending Payment]
+			
+			VAR CurrentDate = MAX('dimdate'[full_date])
+			VAR PreviousDate = EDATE(CurrentDate, -1)
+			VAR TargetYear = YEAR(PreviousDate)
+			VAR TargetMonth = MONTH(PreviousDate)
+			
+			VAR LastMonthVal = 
+			    CALCULATE(
+			        [Pending Payment],
+			        REMOVEFILTERS('dimdate'),
+			        'dimdate'[year_number] = TargetYear,
+			        'dimdate'[month_number] = TargetMonth
+			    )
+			
+			RETURN
+			    DIVIDE(CurrentVal - LastMonthVal, LastMonthVal, BLANK())
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6c26cf5a-ee57-4174-96f8-d839733fba94
+
+	measure 'Failed Payment' =
+			
+			CALCULATE(
+			    SUM('FactPayment'[payment_amount]),
+			    'FactPayment'[payment_status] = "FAILED"
+			)
+		formatString: #,0.00\ "₫";-#,0.00\ "₫";#,0.00\ "₫"
+		lineageTag: 9950fffb-5be1-4cd3-bbce-7252dec15da5
+
+		annotation PBI_FormatHint = {"currencyCulture":"vi-VN"}
+
+	measure 'Failed Payment MoM % Growth' = ```
+			
+			VAR CurrentVal = [Failed Payment]
+			
+			VAR CurrentDate = MAX('dimdate'[full_date])
+			VAR PreviousDate = EDATE(CurrentDate, -1)
+			VAR TargetYear = YEAR(PreviousDate)
+			VAR TargetMonth = MONTH(PreviousDate)
+			
+			VAR LastMonthVal = 
+			    CALCULATE(
+			        [Failed Payment],
+			        REMOVEFILTERS('dimdate'),
+			        'dimdate'[year_number] = TargetYear,
+			        'dimdate'[month_number] = TargetMonth
+			    )
+			
+			RETURN
+			    DIVIDE(CurrentVal - LastMonthVal, LastMonthVal, BLANK())
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: a0aa61a4-4e25-4213-a046-7fdf97184557
+
+	measure 'Cancellation Rate' =
+			
+			VAR CancelledCount =
+			    CALCULATE (
+			        DISTINCTCOUNT ( 'FactCancellation'[policy_info_key] ),
+			        'DimPolicyInfo'[is_deleted] = FALSE ()
+			    )
+			
+			VAR IssuedCount =
+			    CALCULATE (
+			        DISTINCTCOUNT ( 'FactPolicy'[policy_info_key] ),
+			        'DimPolicyInfo'[is_deleted] = FALSE ()
+			    )
+			
+			RETURN
+			    DIVIDE ( CancelledCount, IssuedCount, 0 )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: eb3e27c9-8577-4515-99e3-34d21647188d
+
+	measure 'Cancellation Rate MoM % Growth' =
+			
+			VAR HasRestrictedDateSelection =
+			    ISCROSSFILTERED ( 'dimdate' )
+			
+			VAR CurrentRate =
+			    [Cancellation Rate]
+			
+			VAR CurrentDate =
+			    MAX ( 'dimdate'[full_date] )
+			
+			VAR PreviousDate =
+			    EDATE ( CurrentDate, -1 )
+			
+			VAR TargetYear =
+			    YEAR ( PreviousDate )
+			
+			VAR TargetMonth =
+			    MONTH ( PreviousDate )
+			
+			VAR LastMonthRate =
+			    CALCULATE (
+			        [Cancellation Rate],
+			        REMOVEFILTERS ( 'dimdate' ),
+			        'dimdate'[year_number] = TargetYear,
+			        'dimdate'[month_number] = TargetMonth
+			    )
+			
+			RETURN
+			    IF (
+			        NOT HasRestrictedDateSelection,
+			        BLANK (),
+			        SWITCH (
+			            TRUE (),
+			
+			            -- Previous month has no value or zero, current month has value.
+			            -- Business rule: show 100% growth.
+			            ( ISBLANK ( LastMonthRate ) || LastMonthRate = 0 )
+			                && NOT ISBLANK ( CurrentRate )
+			                && CurrentRate > 0,
+			                1,
+			
+			            -- Previous month has no value/zero and current is also blank/zero.
+			            -- No growth to report.
+			            ISBLANK ( LastMonthRate ) || LastMonthRate = 0,
+			                BLANK (),
+			
+			            -- Normal MoM % growth.
+			            DIVIDE (
+			                CurrentRate - LastMonthRate,
+			                LastMonthRate,
+			                BLANK ()
+			            )
+			        )
+			    )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 3c3632e4-c745-49cf-9256-310ae92e5036
+
+	measure 'Cancellation Count' = ```
+			
+			VAR CancelCount = DISTINCTCOUNT('FactCancellation'[policy_info_key])
+			
+			RETURN 
+			    COALESCE(CancelCount, 0)
+			```
+		formatString: 0
+		lineageTag: 33b5ba76-15c4-4370-a3e3-9c7b936992a5
+
+	measure 'Expired Policy Count' = ```
+			
+			VAR ExpiredCount = 
+			    CALCULATE(
+			        DISTINCTCOUNT('FactPolicy'[policy_info_key]),
+			        'FactPolicy'[policy_status] = "EXPIRED"
+			    )
+			
+			RETURN 
+			    COALESCE(ExpiredCount, 0)
+			```
+		formatString: 0
+		lineageTag: bc1a17f8-4c75-4f1f-8352-02fba2686191
+
+	measure 'Total Quotations' =
+			
+			DISTINCTCOUNT ( factquotationitem[quotation_info_key] )
+		lineageTag: 9e365b31-e6fb-4f5e-9500-827de3e84254
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Accepted Quotations' = ```
+			
+			CALCULATE ( [Total Quotations], factquotationitem[quotation_status] = "ACCEPTED" )
+			-- format: #,0
+			
+			```
+		formatString: 0
+		lineageTag: 4bfa7788-d248-4312-b61b-3f84a09cb222
+
+	measure 'Converted Quotations' =
+			
+			CALCULATE(
+			    [Total Quotations],
+			    factquotationitem[quotation_status] = "CONVERTED"
+			)
+		formatString: 0
+		lineageTag: d4547482-2060-4d63-9a50-b1364c5c927b
+
+	measure RefundAmount = ```
+			
+			    CALCULATE(
+			        SUM('FactPayment'[payment_amount]),
+			        'FactPayment'[payment_status] = "REFUNDED"
+			    )
+			```
+		formatString: #,0.00\ "₫";-#,0.00\ "₫";#,0.00\ "₫"
+		lineageTag: c0400b0b-38c4-41e4-8b74-24023afc517c
+
+		annotation PBI_FormatHint = {"currencyCulture":"vi-VN"}
+
+	measure 'Expired Quotations' =
+			
+			CALCULATE(
+			    [Total Quotations],
+			    factquotationitem[quotation_status] = "EXPIRED"
+			)
+		formatString: 0
+		lineageTag: 37224226-43af-4aa3-84a0-a75bb18913b4
+
+	measure 'Rejected Quotations' =
+			
+			CALCULATE ( [Total Quotations], factquotationitem[quotation_status] = "REJECTED" )
+			-- format: #,0
+		formatString: 0
+		lineageTag: a262b067-1acd-4c81-8817-90ca00145dbc
+
+	measure 'Policies Issued' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT( dimpolicyinfo[policy_id] ),
+			    factpolicy
+			)
+		formatString: 0
+		lineageTag: e4aba949-f1a6-4b66-a4fd-fdd948c49294
+
+	measure 'Total Premium (VND)' =
+			
+			SUM ( factpolicy[policy_premium_amount] )
+		lineageTag: 2bcbf536-9387-4632-9447-a68d14b90130
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Premium' =
+			
+			AVERAGE ( factpolicy[policy_premium_amount] )
+		lineageTag: aa1d5071-ed35-4cd2-b8a2-880c0575b0cb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Conversion Rate' = ```
+			
+			DIVIDE ( [Converted Quotations], [Total Quotations] )
+			-- format: 0.0%
+			-- SWAP for quote-to-policy instead of funnel-converted:
+			-- Conversion Rate = DIVIDE ( [Policies Issued], [Total Quotations] )
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 63c055bb-e449-4c48-afeb-b6217f40f255
+
+	measure 'Active Customers' =
+			
+			CALCULATE (
+			    DISTINCTCOUNT ( factpolicy[customer_key] ),
+			    factpolicy[policy_status] = "ACTIVE"
+			)
+			-- format: #,0
+			-- counts SCD2 surrogate keys. For business-level dedupe across SCD versions:
+			-- Active Customers =
+			-- CALCULATE (
+			--     DISTINCTCOUNT ( dimcustomer[customer_id] ),
+			--     factpolicy[policy_status] = "ACTIVE",
+			--     CROSSFILTER ( factpolicy[customer_key], dimcustomer[customer_key], BOTH )
+			-- )
+		formatString: 0
+		lineageTag: 2c8c2993-30ca-4211-a087-f40d94a9e04f
+
+	measure 'Pending Count 0-7 days' =
+			
+			CALCULATE(
+			    [Pending Payment Count],
+			    'dimdate'[full_date] >= TODAY() - 7,
+			    'dimdate'[full_date] <= TODAY()
+			)
+		lineageTag: 8e489573-2bf3-4284-b42f-f981adc61083
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Pending Count 31-60 days' =
+			
+			CALCULATE(
+			    [Pending Payment Count],
+			    'dimdate'[full_date] >= TODAY() - 60,
+			    'dimdate'[full_date] <= TODAY() - 31
+			)
+		lineageTag: 43cf4221-86ed-4266-80c2-5b2da9cfa644
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Pending Count 8-30 days' =
+			
+			CALCULATE(
+			    [Pending Payment Count],
+			    'dimdate'[full_date] >= TODAY() - 30,
+			    'dimdate'[full_date] <= TODAY() - 8
+			)
+		lineageTag: c8ee1638-354c-41c9-ae12-c2bbd71c74c2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Pending Count 61-90 days' =
+			
+			CALCULATE(
+			    [Pending Payment Count],
+			    'dimdate'[full_date] >= TODAY() - 90,
+			    'dimdate'[full_date] <= TODAY() - 61
+			)
+		lineageTag: 8fcc36a6-e090-4764-80fb-ce1b562a2e86
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Pending Count >90 days' =
+			
+			CALCULATE(
+			    [Pending Payment Count],
+			    'dimdate'[full_date] < TODAY() - 90
+			)
+		lineageTag: 43be08b8-9f13-40ae-84a7-817117baf8e8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Pending Payment Count' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT('FactPayment'[payment_id]),
+			    'FactPayment'[payment_status] = "PENDING"
+			)
+		formatString: 0
+		lineageTag: b71bc7fa-cd11-479a-9899-3e282519295c
+
+	measure 'Successful Payment Count' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT('FactPayment'[payment_id]),
+			    'FactPayment'[payment_status] = "PAID"
+			)
+		formatString: 0
+		lineageTag: b81e9cb9-3aa0-43fd-bdb2-d407dc351999
+
+	measure 'Total Quotations PM' =
+			
+			CALCULATE( [Total Quotations], DATEADD( dimdate[full_date], -1, MONTH ) )
+		formatString: 0
+		lineageTag: f5ce2b70-787d-42c6-83db-46d6233d318e
+
+	measure 'Total Quotations %MoM' =
+			
+			VAR CurrentVal = [Total Quotations]
+			VAR PrevDate = EDATE ( MAX ( dimdate[full_date] ), -1 )
+			VAR PrevVal =
+			    CALCULATE (
+			        [Total Quotations],
+			        REMOVEFILTERS ( dimdate ),
+			        dimdate[year_number] = YEAR ( PrevDate ),
+			        dimdate[month_number] = MONTH ( PrevDate )
+			    )
+			RETURN
+			    DIVIDE ( CurrentVal - PrevVal, PrevVal )
+			-- format: +0.0%;-0.0%
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e79e63d3-5472-4ebd-8f8c-95bf0b9e5c2f
+
+	measure 'Accepted Quotations PM' =
+			
+			CALCULATE( [Accepted Quotations], DATEADD( dimdate[full_date], -1, MONTH ) )
+		formatString: 0
+		lineageTag: 8bff11da-57dc-4210-9fda-b4afadf66bad
+
+	measure 'Accepted Quotations %MoM' =
+			
+			VAR CurrDate = MAX ( dimdate[full_date] )
+			VAR PrevDate = EDATE ( CurrDate, -1 )
+			VAR CurrVal =
+			    CALCULATE (
+			        [Accepted Quotations],
+			        REMOVEFILTERS ( dimdate ),
+			        dimdate[year_number] = YEAR ( CurrDate ),
+			        dimdate[month_number] = MONTH ( CurrDate )
+			    )
+			VAR PrevVal =
+			    CALCULATE (
+			        [Accepted Quotations],
+			        REMOVEFILTERS ( dimdate ),
+			        dimdate[year_number] = YEAR ( PrevDate ),
+			        dimdate[month_number] = MONTH ( PrevDate )
+			    )
+			RETURN
+			    DIVIDE ( CurrVal - PrevVal, PrevVal )
+			-- format: +0.0%;-0.0%
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: fc0a2e9a-070d-4231-afca-039959ea5f09
+
+	measure 'Policies Issued PM' =
+			
+			CALCULATE( [Policies Issued], DATEADD( dimdate[full_date], -1, MONTH ) )
+		formatString: 0
+		lineageTag: b795187d-806a-4baa-b1a0-425d8e288c64
+
+	measure 'Policies Issued MoM %' = ```
+			
+			VAR CurrentValue = [Policies Issued]
+			VAR CurrentDate = MAX( dimdate[full_date] )
+			VAR PreviousDate = EDATE( CurrentDate, -1 )
+			VAR TargetYear = YEAR( PreviousDate )
+			VAR TargetMonth = MONTH( PreviousDate )
+			VAR PreviousValue = 
+			    CALCULATE(
+			        [Policies Issued],
+			        REMOVEFILTERS( dimdate ),
+			        dimdate[year_number] = TargetYear,
+			        dimdate[month_number] = TargetMonth
+			    )
+			RETURN
+			    DIVIDE( CurrentValue - PreviousValue, PreviousValue, BLANK() )
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e6424d5e-680c-4130-91a9-57b57a1a469b
+
+	measure 'Conversion Rate %MoM' =
+			
+			VAR CurrDate = MAX ( dimdate[full_date] )
+			VAR PrevDate = EDATE ( CurrDate, -1 )
+			VAR CurrVal =
+			    CALCULATE (
+			        [Conversion Rate],
+			        REMOVEFILTERS ( dimdate ),
+			        dimdate[year_number] = YEAR ( CurrDate ),
+			        dimdate[month_number] = MONTH ( CurrDate )
+			    )
+			VAR PrevVal =
+			    CALCULATE (
+			        [Conversion Rate],
+			        REMOVEFILTERS ( dimdate ),
+			        dimdate[year_number] = YEAR ( PrevDate ),
+			        dimdate[month_number] = MONTH ( PrevDate )
+			    )
+			RETURN
+			    IF ( NOT ISBLANK ( PrevVal ), CurrVal - PrevVal )
+			-- format: +0.0%;-0.0%   -- percentage-POINT delta (rate vs rate)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 7bd9bd72-d1f1-41a2-b603-b507c3d168e5
+
+	measure 'Total Premium MoM %' = ```
+			
+			VAR CurrentValue = [Total Premium (VND)]
+			VAR CurrentDate = MAX( dimdate[full_date] )
+			VAR PreviousDate = EDATE( CurrentDate, -1 )
+			VAR TargetYear = YEAR( PreviousDate )
+			VAR TargetMonth = MONTH( PreviousDate )
+			VAR PreviousValue = 
+			    CALCULATE(
+			        [Total Premium (VND)],
+			        REMOVEFILTERS( dimdate ),
+			        dimdate[year_number] = TargetYear,
+			        dimdate[month_number] = TargetMonth
+			    )
+			RETURN
+			    DIVIDE( CurrentValue - PreviousValue, PreviousValue, BLANK() )
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e52ed380-a303-4859-8ec9-856006b660d2
+
+	measure 'Active Customers MoM %' = ```
+			
+			VAR CurrentValue = [Active Customers]
+			VAR CurrentDate = MAX( dimdate[full_date] )
+			VAR PreviousDate = EDATE( CurrentDate, -1 )
+			VAR TargetYear = YEAR( PreviousDate )
+			VAR TargetMonth = MONTH( PreviousDate )
+			VAR PreviousValue = 
+			    CALCULATE(
+			        [Active Customers],
+			        REMOVEFILTERS( dimdate ),
+			        dimdate[year_number] = TargetYear,
+			        dimdate[month_number] = TargetMonth
+			    )
+			RETURN
+			    DIVIDE( CurrentValue - PreviousValue, PreviousValue, BLANK() )
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 4eecd387-b8b5-4602-a33a-79e53e7f6433
+
+	measure 'Refunded Payment MoM % Growth' = ```
+			
+			VAR CurrentRefund = [RefundAmount]
+			
+			// Get exactly one month prior
+			VAR CurrentDate = MAX('dimdate'[full_date])
+			VAR PreviousDate = EDATE(CurrentDate, -1)
+			VAR TargetYear = YEAR(PreviousDate)
+			VAR TargetMonth = MONTH(PreviousDate)
+			
+			VAR LastMonthRefund = 
+			    CALCULATE(
+			        [RefundAmount],
+			        REMOVEFILTERS('dimdate'),
+			        'dimdate'[year_number] = TargetYear,
+			        'dimdate'[month_number] = TargetMonth
+			    )
+			
+			RETURN
+			    DIVIDE(
+			        CurrentRefund - LastMonthRefund, 
+			        LastMonthRefund, 
+			        BLANK()
+			    )
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 46065389-815f-4201-8c7b-0c4ec9b32596
+
+	measure 'Quoted Quotations' =
+			
+			CALCULATE ( [Total Quotations], factquotationitem[quotation_status] = "QUOTED" )
+			-- format: #,0
+		formatString: 0
+		lineageTag: cd134f51-57ac-4a22-a3b2-40fedcf83dfe
+
+	measure 'Expired Policies' =
+			
+			CALCULATE ( [Policies Issued], factpolicy[policy_status] = "EXPIRED" )
+			-- format: #,0
+		formatString: 0
+		lineageTag: 923a387b-cefc-4dac-b1ec-5a4153f59b03
+
+	measure 'Actual Collected Premium' = ```
+			
+			VAR GrossPaid = 
+			    CALCULATE(
+			        SUM('FactPayment'[payment_amount]),
+			        'FactPayment'[payment_status] = "PAID"
+			    )
+			
+			VAR RefundedAmount = 
+			    CALCULATE(
+			        SUM('FactPayment'[payment_amount]),
+			        'FactPayment'[payment_status] = "REFUNDED"
+			    )
+			
+			RETURN 
+			    COALESCE(GrossPaid, 0) - COALESCE(RefundedAmount, 0)
+			```
+		formatString: #,0.00\ "₫";-#,0.00\ "₫";#,0.00\ "₫"
+		lineageTag: bda3f6da-2a9c-47cd-b7e4-919d5412fbe5
+
+		annotation PBI_FormatHint = {"currencyCulture":"vi-VN"}
+
+	measure 'Actual Collected Premium MoM % Growth' = ```
+			
+			VAR CurrentPremium = [Actual Collected Premium]
+			
+			// Get exactly one month prior
+			VAR CurrentDate = MAX('dimdate'[full_date])
+			VAR PreviousDate = EDATE(CurrentDate, -1)
+			VAR TargetYear = YEAR(PreviousDate)
+			VAR TargetMonth = MONTH(PreviousDate)
+			
+			VAR LastMonthPremium = 
+			    CALCULATE(
+			        [Actual Collected Premium],
+			        REMOVEFILTERS('dimdate'),
+			        'dimdate'[year_number] = TargetYear,
+			        'dimdate'[month_number] = TargetMonth
+			    )
+			
+			RETURN
+			    DIVIDE(
+			        CurrentPremium - LastMonthPremium, 
+			        LastMonthPremium, 
+			        BLANK()
+			    )
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 8d1dee58-5523-4782-a4d1-54a3d11ab26b
+
+	measure 'Total Premium %MoM' =
+			
+			VAR CurrentVal = [Total Premium (VND)]
+			VAR PrevDate = EDATE ( MAX ( dimdate[full_date] ), -1 )
+			VAR PrevVal =
+			    CALCULATE (
+			        [Total Premium (VND)],
+			        REMOVEFILTERS ( dimdate ),
+			        dimdate[year_number] = YEAR ( PrevDate ),
+			        dimdate[month_number] = MONTH ( PrevDate )
+			    )
+			RETURN
+			    DIVIDE ( CurrentVal - PrevVal, PrevVal )
+			-- format: +0.0%;-0.0%
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: c48ca777-a85a-42a1-b325-6aea82f6e943
+
+	measure 'Avg Premium %MoM' =
+			
+			VAR CurrentVal = [Avg Premium]
+			VAR PrevDate = EDATE ( MAX ( dimdate[full_date] ), -1 )
+			VAR PrevVal =
+			    CALCULATE (
+			        [Avg Premium],
+			        REMOVEFILTERS ( dimdate ),
+			        dimdate[year_number] = YEAR ( PrevDate ),
+			        dimdate[month_number] = MONTH ( PrevDate )
+			    )
+			RETURN
+			    DIVIDE ( CurrentVal - PrevVal, PrevVal )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: c2f1ff54-2335-4b67-aded-6450fdc0c10c
+
+	measure 'Active Customers %MoM' =
+			
+			VAR CurrentVal = [Active Customers]
+			VAR PrevDate = EDATE ( MAX ( dimdate[full_date] ), -1 )
+			VAR PrevVal =
+			    CALCULATE (
+			        [Active Customers],
+			        REMOVEFILTERS ( dimdate ),
+			        dimdate[year_number] = YEAR ( PrevDate ),
+			        dimdate[month_number] = MONTH ( PrevDate )
+			    )
+			RETURN
+			    DIVIDE ( CurrentVal - PrevVal, PrevVal )
+			-- format: +0.0%;-0.0%
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 55b3d1e1-1346-4f63-a80e-250270c63371
+
+	measure 'Cancelled Policies' =
+			
+			CALCULATE ( [Policies Issued], factpolicy[policy_status] = "CANCELLED" )
+		formatString: 0
+		lineageTag: 69e8c1f3-9fa2-45ee-b405-3eef5798af4d
+
+	measure 'Previous Total Quotations' =
+			
+			VAR PrevDate = EDATE ( MAX ( dimdate[full_date] ), -1 )
+			RETURN
+			    CALCULATE (
+			        [Total Quotations],
+			        REMOVEFILTERS ( dimdate ),
+			        dimdate[year_number] = YEAR ( PrevDate ),
+			        dimdate[month_number] = MONTH ( PrevDate )
+			    )
+		formatString: 0
+		lineageTag: 63035034-0701-4bee-9ec7-c14de206b109
+
+	measure 'Provider Bar Color By Conversion Rate' =
+			
+			VAR CurrentRank =
+			    RANKX(
+			        ALLSELECTED('dimprovider'[provider_name]),
+			        [Conversion Rate],
+			        ,
+			        DESC
+			    )
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    CurrentRank = 1, "#6A1F7A",   -- Dark Purple
+			    CurrentRank <= 3, "#815AC0",  -- Medium Purple
+			    "#A06CD5"                     -- Light Purple
+			)
+		lineageTag: 32b193ea-1d51-46d0-b397-a61359d9d627
+
+	measure 'Agent Bar Color' =
+			
+			VAR CurrentRank =
+			    RANKX(
+			        ALLSELECTED('dimagent'[agent_name]),
+			        [Policies Issued],
+			        ,
+			        DESC
+			    )
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    CurrentRank = 1, "#6A1F7A",   -- Dark Purple
+			    CurrentRank <= 3, "#815AC0",  -- Medium Purple
+			    "#A06CD5"                     -- Light Purple
+			)
+		lineageTag: 4a7ad7e8-119f-4db7-860f-35bbbec2566d
+
+	measure 'Total Quotation Difference' = [Total Quotations] - [Previous Total Quotations]
+		formatString: 0
+		lineageTag: f12d1908-c935-4e56-8284-a6404f022bfb
+
+	measure 'Current User' = "Current User: " & USERPRINCIPALNAME()
+		lineageTag: 343d2298-1720-4efc-994b-f9122eda7f04
+
+	measure 'Package Share %' =
+			
+			DIVIDE( [Total Quotations], CALCULATE([Total Quotations], REMOVEFILTERS('dimquotationinfo'[package_code])))
+		lineageTag: de9c42db-30c9-4a6f-acac-b364f677ffdb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Provider Bar Color By Premium' =
+			
+			VAR CurrentRank =
+			    RANKX(
+			        ALLSELECTED('dimprovider'[provider_name]),
+			        [Total Premium (VND)],
+			        ,
+			        DESC
+			    )
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    CurrentRank = 1, "#6A1F7A",   -- Dark Purple
+			    CurrentRank <= 3, "#815AC0",  -- Medium Purple
+			    "#A06CD5"                     -- Light Purple
+			)
+		lineageTag: 5c0d21de-1a61-419f-a881-de1cd4330d6d
+
+	column Column
+		formatString: 0
+		lineageTag: 124539de-f015-4070-8f69-6d7a56d3fa5e
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _measure = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 3053487dfe444c7089a164270e841a15
+

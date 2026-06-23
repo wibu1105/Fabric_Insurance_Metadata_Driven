@@ -1,0 +1,90 @@
+table audit_session_log
+	lineageTag: fb830dba-99fa-4d23-8f92-6faf91138dd4
+	sourceLineageTag: [audit].[audit_session_log]
+
+	column audit_session_id
+		dataType: string
+		lineageTag: 87909bba-5a8d-44d8-879c-309eacf85a62
+		sourceLineageTag: audit_session_id
+		summarizeBy: none
+		sourceColumn: audit_session_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column audit_batch_id
+		dataType: string
+		lineageTag: b91375ca-4637-4e29-8aa6-97b373921309
+		sourceLineageTag: audit_batch_id
+		summarizeBy: none
+		sourceColumn: audit_batch_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column pipeline_name
+		dataType: string
+		lineageTag: 513ce8a9-6054-4133-873e-5a189cb85bd5
+		sourceLineageTag: pipeline_name
+		summarizeBy: none
+		sourceColumn: pipeline_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column triggered_by
+		dataType: string
+		lineageTag: b09141b4-71ec-442a-b18b-0bdda05ff755
+		sourceLineageTag: triggered_by
+		summarizeBy: none
+		sourceColumn: triggered_by
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_status
+		dataType: string
+		lineageTag: 09669148-9431-4d7f-a9de-ff921379d08d
+		sourceLineageTag: session_status
+		summarizeBy: none
+		sourceColumn: session_status
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_start
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: eb5a8909-ff72-4fef-99cc-dda65de55934
+		sourceLineageTag: session_start
+		summarizeBy: none
+		sourceColumn: session_start
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_end
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0c58b709-5134-41e8-9742-d35a49c1b021
+		sourceLineageTag: session_end
+		summarizeBy: none
+		sourceColumn: session_end
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition audit_session_log = entity
+		mode: directLake
+		source
+			entityName: audit_session_log
+			schemaName: audit
+			expressionSource: 'DirectLake - Rookie2Engineer_Warehouse'
+

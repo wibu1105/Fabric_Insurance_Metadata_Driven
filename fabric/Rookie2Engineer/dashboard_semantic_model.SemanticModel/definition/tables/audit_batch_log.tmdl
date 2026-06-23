@@ -1,0 +1,67 @@
+table audit_batch_log
+	lineageTag: bb6d7fa8-7256-41eb-a294-da56076ce91c
+	sourceLineageTag: [audit].[audit_batch_log]
+
+	column audit_batch_id
+		dataType: string
+		lineageTag: 21d9c27f-c403-43cc-916d-6faf50047dfe
+		sourceLineageTag: audit_batch_id
+		summarizeBy: none
+		sourceColumn: audit_batch_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column batch_name
+		dataType: string
+		lineageTag: 38e8cb4f-4b26-40a7-9477-c32448eaf81c
+		sourceLineageTag: batch_name
+		summarizeBy: none
+		sourceColumn: batch_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column triggered_by
+		dataType: string
+		lineageTag: b06e770f-79e9-4bdb-abfa-5667b14e0701
+		sourceLineageTag: triggered_by
+		summarizeBy: none
+		sourceColumn: triggered_by
+
+		annotation SummarizationSetBy = Automatic
+
+	column batch_status
+		dataType: string
+		lineageTag: 90d55ef1-ab59-4477-9a40-c42536cf1439
+		sourceLineageTag: batch_status
+		summarizeBy: none
+		sourceColumn: batch_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_start
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 70b08244-23c8-478f-ab9b-04c14a0d6933
+		sourceLineageTag: session_start
+		summarizeBy: none
+		sourceColumn: session_start
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_end
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 729846b4-43d2-4b35-89a1-55549c15b0cb
+		sourceLineageTag: session_end
+		summarizeBy: none
+		sourceColumn: session_end
+
+		annotation SummarizationSetBy = Automatic
+
+	partition audit_batch_log = entity
+		mode: directLake
+		source
+			entityName: audit_batch_log
+			schemaName: audit
+			expressionSource: 'DirectLake - Rookie2Engineer_Warehouse'
+

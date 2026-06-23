@@ -1,0 +1,78 @@
+table audit_error_log
+	lineageTag: 2eba6721-d1c1-4215-b9f6-568c1f11276c
+	sourceLineageTag: [audit].[audit_error_log]
+
+	column audit_error_id
+		dataType: string
+		lineageTag: 23c31659-a450-4664-92e9-07b2ec808e49
+		sourceLineageTag: audit_error_id
+		summarizeBy: none
+		sourceColumn: audit_error_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column audit_table_session_id
+		dataType: string
+		lineageTag: ec7aacb0-1d9a-4b11-a89a-28f6d46fe7e5
+		sourceLineageTag: audit_table_session_id
+		summarizeBy: none
+		sourceColumn: audit_table_session_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column step_name
+		dataType: string
+		lineageTag: ebfc2daa-0973-453e-873d-2fb4285148ed
+		sourceLineageTag: step_name
+		summarizeBy: none
+		sourceColumn: step_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column error_code
+		dataType: string
+		lineageTag: 43686081-4856-4f11-8f58-aaf82963d739
+		sourceLineageTag: error_code
+		summarizeBy: none
+		sourceColumn: error_code
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column error_name
+		dataType: string
+		lineageTag: 88004633-65ef-4d44-9a10-57f77f035914
+		sourceLineageTag: error_name
+		summarizeBy: none
+		sourceColumn: error_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column error_time
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5ed8a2de-3092-4e97-9070-bf14f19b5e1f
+		sourceLineageTag: error_time
+		summarizeBy: none
+		sourceColumn: error_time
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition audit_error_log = entity
+		mode: directLake
+		source
+			entityName: audit_error_log
+			schemaName: audit
+			expressionSource: 'DirectLake - Rookie2Engineer_Warehouse'
+

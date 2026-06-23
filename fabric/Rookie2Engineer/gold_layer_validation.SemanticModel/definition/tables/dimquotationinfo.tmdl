@@ -1,0 +1,49 @@
+table dimquotationinfo
+	lineageTag: 66e620d4-b595-4eb7-bff8-0563b6e1481a
+	sourceLineageTag: [gold].[dimquotationinfo]
+
+	column quotation_info_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 0e9770d6-a973-43a6-90fa-11eaf5bf3ef5
+		sourceLineageTag: quotation_info_key
+		summarizeBy: none
+		sourceColumn: quotation_info_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column quotation_id
+		dataType: string
+		lineageTag: e96894f8-c3c7-4f27-9036-e37f230974bb
+		sourceLineageTag: quotation_id
+		summarizeBy: none
+		sourceColumn: quotation_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column package_code
+		dataType: string
+		lineageTag: 227584df-0084-4c0d-816e-1b935596bc7f
+		sourceLineageTag: package_code
+		summarizeBy: none
+		sourceColumn: package_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_deleted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e63cf8ff-7e26-4504-a5cd-3c7d748618cd
+		sourceLineageTag: is_deleted
+		summarizeBy: none
+		sourceColumn: is_deleted
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimquotationinfo = entity
+		mode: directLake
+		source
+			entityName: dimquotationinfo
+			schemaName: gold
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

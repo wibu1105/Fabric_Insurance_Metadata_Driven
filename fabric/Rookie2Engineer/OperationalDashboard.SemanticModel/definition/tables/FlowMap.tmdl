@@ -1,0 +1,46 @@
+table FlowMap
+	lineageTag: ab07681f-30a1-4ed8-9459-2d143b5309a0
+	sourceLineageTag: a9863a72-a684-47ae-af4e-a21451746b1d
+
+	measure 'Sankey Value' = EXTERNALMEASURE("Sankey Value", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: 666877fc-682c-481c-af6f-a38efc40369b
+		sourceLineageTag: 69e43038-b8a9-4f28-a887-50fb0c4a1325
+		dataCategory: Uncategorized
+
+	column source
+		dataType: string
+		lineageTag: d44db803-f756-453c-964b-77daff65346f
+		sourceLineageTag: bef886b2-9ecb-4ed4-ade4-fd198822f80c
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = User
+
+	column target
+		dataType: string
+		lineageTag: 388f66dc-2f41-4d46-9b8f-681c401aa4e5
+		sourceLineageTag: 3d889460-0da9-40b7-b730-580327e019b6
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: target
+
+		annotation SummarizationSetBy = User
+
+	column stage_measure
+		dataType: string
+		lineageTag: f210e2bc-8dea-4d22-b467-ac6e0f902e3e
+		sourceLineageTag: e7a06ebf-2c63-4bd8-8fd8-3316a130379b
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: stage_measure
+
+		annotation SummarizationSetBy = User
+
+	partition FlowMap = entity
+		mode: directQuery
+		source
+			entityName: FlowMap
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

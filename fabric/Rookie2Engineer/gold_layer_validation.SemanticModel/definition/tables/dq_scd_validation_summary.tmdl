@@ -1,0 +1,50 @@
+table dq_scd_validation_summary
+	lineageTag: 9cc7e4f5-f123-440e-87fa-df4fe47d4f85
+	sourceLineageTag: [validate].[dq_scd_validation_summary]
+
+	measure 'SCD Validation Status' =
+			
+			IF (
+			    SUM('dq_scd_validation_summary'[issue_count]) > 0,
+			    "Fail",
+			    "Pass"
+			)
+		lineageTag: ffb7cc52-5640-4501-98f1-73e7ef354487
+
+		changedProperty = Name
+
+	column check_name
+		dataType: string
+		lineageTag: 7a080840-a780-4712-9020-20a4777cef84
+		sourceLineageTag: check_name
+		summarizeBy: none
+		sourceColumn: check_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column issue_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 61fb8060-570c-4367-af56-d76968bf9f21
+		sourceLineageTag: issue_count
+		summarizeBy: sum
+		sourceColumn: issue_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: 174a15c4-4e77-4607-a995-9b11818d4a72
+		sourceLineageTag: status
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dq_scd_validation_summary = entity
+		mode: directLake
+		source
+			entityName: dq_scd_validation_summary
+			schemaName: validate
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

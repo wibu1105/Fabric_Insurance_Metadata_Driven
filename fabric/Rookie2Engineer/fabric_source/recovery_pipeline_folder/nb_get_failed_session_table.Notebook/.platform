@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_get_failed_session_table"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f077dc70-f3ac-8caa-4c69-e91ab3529940"
+  }
+}

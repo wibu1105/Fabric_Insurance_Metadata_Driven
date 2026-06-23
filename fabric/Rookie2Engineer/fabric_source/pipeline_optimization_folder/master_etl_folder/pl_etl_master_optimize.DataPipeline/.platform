@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "pl_etl_master_optimize"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "46ac82e7-7260-8c95-432a-13bd9f704e11"
+  }
+}

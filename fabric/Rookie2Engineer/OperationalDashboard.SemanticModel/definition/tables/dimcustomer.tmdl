@@ -1,0 +1,147 @@
+table dimcustomer
+	lineageTag: f71e1a00-475b-4f26-9817-9a1224ad75b1
+	sourceLineageTag: 1806bde9-c7a7-4215-a8f9-379057ebc09f
+
+	column customer_key
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		lineageTag: 845b960e-3049-48de-9f5b-70188067e24c
+		sourceLineageTag: 65f724c4-638a-490e-9849-79e0b06f15c5
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = User
+
+	column customer_id
+		dataType: string
+		lineageTag: a028749c-f4af-4545-bdc6-e0cbadd5f4e6
+		sourceLineageTag: 5d3e48d1-edf3-4098-80ef-c9dfe6a1b48c
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = User
+
+	column full_name
+		dataType: string
+		lineageTag: 0a734789-ece9-4bf8-a5cb-dfd2f7a9afab
+		sourceLineageTag: 3253ad8a-251a-408e-9f7e-19a07242f99f
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: full_name
+
+		annotation SummarizationSetBy = User
+
+	column gender
+		dataType: string
+		lineageTag: 2fec8a73-94f8-47c0-aa0c-764cd3a55927
+		sourceLineageTag: 8cbd6358-9fb7-4cc8-8d22-a39fa3978d44
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: gender
+
+		annotation SummarizationSetBy = User
+
+	column date_of_birth
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: 3ef5a175-7e77-4155-b7ea-78187c15a3d2
+		sourceLineageTag: 5fdbbb36-1937-497a-a220-d49f192f1e39
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: date_of_birth
+
+		annotation SummarizationSetBy = User
+
+	column phone_number
+		dataType: string
+		lineageTag: ee66b541-25a6-4bb0-9439-b2c2295ae362
+		sourceLineageTag: 1f480425-5652-482e-8b7e-37f36b8e39af
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: phone_number
+
+		annotation SummarizationSetBy = User
+
+	column email
+		dataType: string
+		lineageTag: 70eb3c44-717d-4df8-9523-75281c4cb4ef
+		sourceLineageTag: c52823cc-31f9-4ea1-a7b5-8dfe70985ee7
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: email
+
+		annotation SummarizationSetBy = User
+
+	column city
+		dataType: string
+		lineageTag: 0c4dede8-0296-4abb-8438-71512f445038
+		sourceLineageTag: 4f1c358c-279e-4ba2-90f3-cdb9858d5f17
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = User
+
+	column district
+		dataType: string
+		lineageTag: 745ff235-2f92-4235-9f9f-bb3cfdf88e7c
+		sourceLineageTag: e4f13ec3-2db4-4dac-8689-9e8fe9ad231b
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: district
+
+		annotation SummarizationSetBy = User
+
+	column created_date
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: 5abba47a-9556-485b-b84c-bb094cedd236
+		sourceLineageTag: 8dc62d6d-5ee4-4422-8ecf-79b0b8c5ce38
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: created_date
+
+		annotation SummarizationSetBy = User
+
+	column effective_start_date
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: 96ff4370-cb37-4ef3-8e00-9e0a2c5858c8
+		sourceLineageTag: cb65f634-66c0-4aeb-9504-e58ca1b7c929
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: effective_start_date
+
+		annotation SummarizationSetBy = User
+
+	column effective_end_date
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: f7f72ce1-a4ee-48f7-840d-6a044aa6e088
+		sourceLineageTag: ed3753cb-45ed-48b4-b939-49011e24fe06
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: effective_end_date
+
+		annotation SummarizationSetBy = User
+
+	column is_current
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 9851d82c-c6e3-4855-893d-80858ba01d01
+		sourceLineageTag: eadb7877-9ee2-4e91-8430-824072edba4e
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: is_current
+
+		annotation SummarizationSetBy = User
+
+	partition dimcustomer = entity
+		mode: directQuery
+		source
+			entityName: dimcustomer
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

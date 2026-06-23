@@ -1,0 +1,53 @@
+table dimquotationinfo
+	lineageTag: 08ea52f4-94df-4599-916c-25eee7deb961
+	sourceLineageTag: 542984dd-ddd7-40a6-a174-387f18c18f47
+
+	column quotation_info_key
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		lineageTag: 0ce4e85a-6655-492d-85d7-8d5eabcd9afe
+		sourceLineageTag: e1e3850b-ae58-427b-9954-c2a62dcc11e4
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: quotation_info_key
+
+		annotation SummarizationSetBy = User
+
+	column quotation_id
+		dataType: string
+		lineageTag: fe44f699-8f37-4049-9a44-87573b7a1e68
+		sourceLineageTag: b1d77c2b-01ef-4540-927f-ac4e82c8de9b
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: quotation_id
+
+		annotation SummarizationSetBy = User
+
+	column package_code
+		dataType: string
+		lineageTag: b33843b1-35af-47cb-9a3c-1bd8325d8f49
+		sourceLineageTag: 514ac6a4-11aa-4a7d-b8ad-1a73b5087000
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: package_code
+
+		annotation SummarizationSetBy = User
+
+	column is_deleted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e7975c2f-8202-4a97-890b-01a471bb2619
+		sourceLineageTag: 2bd6dd10-302b-46cb-ad18-1805b1a17df9
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: is_deleted
+
+		annotation SummarizationSetBy = User
+
+	partition dimquotationinfo = entity
+		mode: directQuery
+		source
+			entityName: dimquotationinfo
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

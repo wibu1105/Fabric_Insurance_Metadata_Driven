@@ -1,0 +1,88 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "7a962eb078c8d07a5678",
+  "displayName": "Package Details",
+  "displayOption": "ActualSize",
+  "height": 1080,
+  "width": 1920,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "ecd95d6080b558b4a312",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dimquotationinfo"
+              }
+            },
+            "Property": "package_code"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "d",
+              "Entity": "dimquotationinfo",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "d"
+                          }
+                        },
+                        "Property": "package_code"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'BASIC'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "Drillthrough"
+      }
+    ]
+  },
+  "pageBinding": {
+    "name": "c2b54ea3cb608ba50c3e",
+    "type": "Drillthrough",
+    "parameters": [
+      {
+        "name": "900bb309871ac4732483",
+        "boundFilter": "ecd95d6080b558b4a312",
+        "fieldExpr": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dimquotationinfo"
+              }
+            },
+            "Property": "package_code"
+          }
+        }
+      }
+    ],
+    "referenceScope": "CrossReport"
+  },
+  "visibility": "HiddenInViewMode"
+}

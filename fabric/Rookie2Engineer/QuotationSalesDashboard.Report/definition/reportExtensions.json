@@ -1,0 +1,35 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/reportExtension/1.0.0/schema.json",
+  "name": "extension",
+  "entities": [
+    {
+      "name": "_measure",
+      "measures": [
+        {
+          "name": "Last Batch Run Time",
+          "dataType": "DateTime",
+          "expression": "\nVAR LatestSuccessBatch = \n    CALCULATE(\n        MAX('audit_batch_log'[session_end]),\n        'audit_batch_log'[batch_status] = \"Succeeded\"\n    )\n    \nRETURN\n    IF(\n        ISBLANK(LatestSuccessBatch),\n        \"No Successful Runs\",\n        FORMAT(LatestSuccessBatch, \"dd-MMM-yyyy HH:mm:ss\")\n    )",
+          "formatString": "General Number"
+        },
+        {
+          "name": "TotalPolicies",
+          "dataType": "Double",
+          "expression": "DISTINCTCOUNT(factpolicy[policy_info_key])",
+          "formatString": "General Number"
+        },
+        {
+          "name": "Policies YoY % Growth",
+          "dataType": "Double",
+          "expression": "\r\nVAR CurrentPolicies = DISTINCTCOUNT('factpolicy'[policy_info_key])\r\n\r\nVAR LastYearPolicies = \r\n    CALCULATE(\r\n        DISTINCTCOUNT('factpolicy'[policy_info_key]),\r\n        SAMEPERIODLASTYEAR('dimdate'[full_date])\r\n    )\r\n\r\nRETURN\r\n    DIVIDE(\r\n        CurrentPolicies - LastYearPolicies,\r\n        LastYearPolicies,\r\n        BLANK()\r\n    )",
+          "formatString": "0.00\\ %;-0.00\\ %;0.00\\ %"
+        },
+        {
+          "name": "Total Policies (Last Year)",
+          "dataType": "Double",
+          "expression": "\r\nCALCULATE(\r\n    DISTINCTCOUNT('factpolicy'[policy_info_key]),\r\n    SAMEPERIODLASTYEAR('dimdate'[full_date])\r\n)",
+          "formatString": "General Number"
+        }
+      ]
+    }
+  ]
+}

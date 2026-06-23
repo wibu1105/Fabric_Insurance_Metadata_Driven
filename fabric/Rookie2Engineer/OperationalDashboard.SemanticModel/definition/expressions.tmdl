@@ -1,0 +1,11 @@
+expression 'DirectQuery to AS - dashboard_semantic_model' =
+		let
+		    Source = AnalysisServices.Database("powerbi://api.powerbi.com/v1.0/myorg/Rookie2Engineer_Dev", "dashboard_semantic_model"),
+		    Cubes = Table.Combine(Source[Data]),
+		    Cube = Cubes{[Id="Model", Kind="Cube"]}[Data]
+		in
+		    Cube
+	lineageTag: c8e6d697-e47c-48cc-9206-613677e8110a
+
+	annotation PBI_IncludeFutureArtifacts = True
+

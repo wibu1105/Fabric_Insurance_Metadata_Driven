@@ -1,0 +1,474 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "v_audit_batch_id",
+          "value": {
+            "value": "@string(guid())  ",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Set audit_batch_id",
+        "dependsOn": []
+      },
+      {
+        "type": "ExecutePipeline",
+        "typeProperties": {
+          "pipeline": {
+            "referenceName": "0b7ba0be-1aa1-b8af-4193-82689d240fc0",
+            "type": "PipelineReference"
+          },
+          "parameters": {
+            "p_audit_batch_id": {
+              "value": "@variables('v_audit_batch_id')",
+              "type": "Expression"
+            },
+            "p_batch_date": {
+              "value": "@pipeline().parameters.p_batch_date_source",
+              "type": "Expression"
+            },
+            "p_triggered_by": {
+              "value": "@pipeline().parameters.p_triggered_by",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true
+        },
+        "policy": {
+          "secureInput": false
+        },
+        "name": "Invoke pipeline pl_source_to_landing",
+        "dependsOn": [
+          {
+            "activity": "Insert audit_batch_log",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ExecutePipeline",
+        "typeProperties": {
+          "pipeline": {
+            "referenceName": "c8483a7d-881c-abe9-4b94-3ea0e097c820",
+            "type": "PipelineReference"
+          },
+          "parameters": {
+            "p_audit_batch_id": {
+              "value": "@variables('v_audit_batch_id')",
+              "type": "Expression"
+            },
+            "p_triggered_by": {
+              "value": "@pipeline().parameters.p_triggered_by",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true
+        },
+        "policy": {
+          "secureInput": false
+        },
+        "name": "Invoke pipeline pl_landing_to_bronze",
+        "dependsOn": [
+          {
+            "activity": "Invoke pipeline pl_source_to_landing",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ExecutePipeline",
+        "typeProperties": {
+          "pipeline": {
+            "referenceName": "05246a07-eaf8-9b6f-40d4-70cec650fc0e",
+            "type": "PipelineReference"
+          },
+          "parameters": {
+            "triggered_by": {
+              "value": "@pipeline().parameters.p_triggered_by",
+              "type": "Expression"
+            },
+            "audit_batch_id": {
+              "value": "@variables('v_audit_batch_id')",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true
+        },
+        "policy": {
+          "secureInput": false
+        },
+        "name": "Invoke pipeline pl_bronze_to_silver",
+        "dependsOn": [
+          {
+            "activity": "Invoke pipeline pl_landing_to_bronze",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ExecutePipeline",
+        "typeProperties": {
+          "pipeline": {
+            "referenceName": "a9280019-b626-a77f-413d-bfcb6956d0b7",
+            "type": "PipelineReference"
+          },
+          "parameters": {
+            "p_triggered_by": {
+              "value": "@pipeline().parameters.p_triggered_by",
+              "type": "Expression"
+            },
+            "p_audit_batch_id": {
+              "value": "@variables('v_audit_batch_id')",
+              "type": "Expression"
+            },
+            "p_etl_date": {
+              "value": "@pipeline().parameters.p_batch_date",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true
+        },
+        "policy": {
+          "secureInput": false
+        },
+        "name": "Invoke pipeline pl_silver_to_gold",
+        "dependsOn": [
+          {
+            "activity": "Invoke pipeline pl_bronze_to_silver",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_batch_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "insert",
+              "type": "String"
+            },
+            "audit_batch_id": {
+              "value": {
+                "value": "@{variables('v_audit_batch_id')}",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "batch_name": {
+              "value": "Master ETL Pipeline",
+              "type": "String"
+            },
+            "triggered_by": {
+              "value": {
+                "value": "@{pipeline().parameters.p_triggered_by}",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Insert audit_batch_log",
+        "dependsOn": [
+          {
+            "activity": "Set audit_batch_id",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_batch_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "failed",
+              "type": "String"
+            },
+            "audit_batch_id": {
+              "value": {
+                "value": "@{variables('v_audit_batch_id')}",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Update audit_batch_log_copy FAILED_1",
+        "dependsOn": [
+          {
+            "activity": "Invoke pipeline pl_source_to_landing",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_batch_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "failed",
+              "type": "String"
+            },
+            "audit_batch_id": {
+              "value": {
+                "value": "@{variables('v_audit_batch_id')}",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Update audit_batch_log_copy FAILED_2",
+        "dependsOn": [
+          {
+            "activity": "Invoke pipeline pl_landing_to_bronze",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_batch_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "failed",
+              "type": "String"
+            },
+            "audit_batch_id": {
+              "value": {
+                "value": "@{variables('v_audit_batch_id')}",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Update audit_batch_log_copy FAILED_3",
+        "dependsOn": [
+          {
+            "activity": "Invoke pipeline pl_bronze_to_silver",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_batch_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "failed",
+              "type": "String"
+            },
+            "audit_batch_id": {
+              "value": {
+                "value": "@{variables('v_audit_batch_id')}",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Update audit_batch_log_copy FAILED_4",
+        "dependsOn": [
+          {
+            "activity": "Invoke pipeline pl_silver_to_gold",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_batch_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "success",
+              "type": "String"
+            },
+            "audit_batch_id": {
+              "value": {
+                "value": "@{variables('v_audit_batch_id')}",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Update audit_batch_log_copy SUCCESS",
+        "dependsOn": [
+          {
+            "activity": "Invoke pipeline pl_silver_to_gold",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "p_triggered_by": {
+        "type": "string",
+        "defaultValue": "system"
+      },
+      "p_batch_date": {
+        "type": "string",
+        "defaultValue": "@formatDateTime(utcNow(),'yyyy-MM-dd')"
+      },
+      "p_execution_mode": {
+        "type": "string",
+        "defaultValue": "normal"
+      },
+      "p_batch_date_source": {
+        "type": "string",
+        "defaultValue": "2026-05-25"
+      }
+    },
+    "variables": {
+      "v_audit_batch_id": {
+        "type": "String"
+      }
+    }
+  }
+}

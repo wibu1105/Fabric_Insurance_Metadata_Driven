@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "pl_recovery_source_to_landing"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "5a44b954-004a-ac1c-4a5b-514864e15249"
+  }
+}

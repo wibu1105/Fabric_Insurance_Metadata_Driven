@@ -1,0 +1,49 @@
+table dashboard_validation
+	lineageTag: bc4b1dd5-cafd-409b-bfcd-55dbc49c6968
+	sourceLineageTag: [validate].[dashboard_validation]
+
+	column dashboard_name
+		dataType: string
+		lineageTag: b19da25a-bcd5-4018-bca3-4bc4fb930c5d
+		sourceLineageTag: dashboard_name
+		summarizeBy: none
+		sourceColumn: dashboard_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column kpi_group
+		dataType: string
+		lineageTag: 877c49bd-da5a-4224-9cf6-e11c930fa03b
+		sourceLineageTag: kpi_group
+		summarizeBy: none
+		sourceColumn: kpi_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column kpi_name
+		dataType: string
+		lineageTag: e2e34047-813a-4444-a6f3-f0aa91545d3d
+		sourceLineageTag: kpi_name
+		summarizeBy: none
+		sourceColumn: kpi_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column sql_query_value
+		dataType: double
+		lineageTag: 8a63f13d-05c9-42c3-b0da-dfa6f04c3fe4
+		sourceLineageTag: sql_query_value
+		summarizeBy: sum
+		sourceColumn: sql_query_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition dashboard_validation = entity
+		mode: directLake
+		source
+			entityName: dashboard_validation
+			schemaName: validate
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

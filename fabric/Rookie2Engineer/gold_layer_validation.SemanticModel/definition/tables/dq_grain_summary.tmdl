@@ -1,0 +1,72 @@
+table dq_grain_summary
+	lineageTag: bb1cc013-e9b6-4d0a-bdb5-7e337ff15d3f
+	sourceLineageTag: [validate].[dq_grain_summary]
+
+	measure 'Grain Status (Strict)' = ```
+			
+			IF (
+			    SUM('dq_grain_summary'[total_rows]) 
+			        <> SUM('dq_grain_summary'[distinct_grain_rows]),
+			    "Fail",
+			    "Pass"
+			)
+			```
+		lineageTag: 4c0a194b-8442-4039-bdcd-04a0446c382a
+
+		changedProperty = Name
+
+	column fact_table
+		dataType: string
+		lineageTag: 1df0df3e-bd28-49b1-bb35-2b33e636b676
+		sourceLineageTag: fact_table
+		summarizeBy: none
+		sourceColumn: fact_table
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_rows
+		dataType: int64
+		formatString: 0
+		lineageTag: 23cf9886-7edc-4b9b-b418-815e39cc5e34
+		sourceLineageTag: total_rows
+		summarizeBy: sum
+		sourceColumn: total_rows
+
+		annotation SummarizationSetBy = Automatic
+
+	column distinct_grain_rows
+		dataType: int64
+		formatString: 0
+		lineageTag: 76eb535e-ee0e-42e4-a3fe-5e311f4a323f
+		sourceLineageTag: distinct_grain_rows
+		summarizeBy: sum
+		sourceColumn: distinct_grain_rows
+
+		annotation SummarizationSetBy = Automatic
+
+	column duplicate_rows
+		dataType: int64
+		formatString: 0
+		lineageTag: f23434d7-d101-43aa-b47d-eaba6cd3b5f8
+		sourceLineageTag: duplicate_rows
+		summarizeBy: sum
+		sourceColumn: duplicate_rows
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: 5ab6c2b3-8b45-4ebb-811e-ef6962f73870
+		sourceLineageTag: status
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dq_grain_summary = entity
+		mode: directLake
+		source
+			entityName: dq_grain_summary
+			schemaName: validate
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

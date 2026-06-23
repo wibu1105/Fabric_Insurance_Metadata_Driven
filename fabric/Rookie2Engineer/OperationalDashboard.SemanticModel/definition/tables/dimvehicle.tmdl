@@ -1,0 +1,104 @@
+table dimvehicle
+	lineageTag: 4dd40046-6198-44cb-88d3-58a7709b55b9
+	sourceLineageTag: ddfa71a7-0556-4aad-a702-a30fa34f4725
+
+	column vehicle_key
+		dataType: int64
+		formatString: 0
+		lineageTag: a28f7a47-ab8c-4b76-a88c-f4424751127c
+		sourceLineageTag: f24a845e-6e02-448b-b1bd-60eac93b4dba
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: vehicle_key
+
+		annotation SummarizationSetBy = User
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: ae376d43-1c0c-4547-a98f-19269bee8bef
+		sourceLineageTag: 14bfada8-4999-41d2-9dfe-21c6b3eb8e34
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = User
+
+	column vehicle_id
+		dataType: string
+		lineageTag: cde8c6f6-410c-4ce8-aef0-9697a896dba0
+		sourceLineageTag: 0bc69389-a458-4021-9e0d-a464e1c88f03
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: vehicle_id
+
+		annotation SummarizationSetBy = User
+
+	column plate_number
+		dataType: string
+		lineageTag: ad7d59b4-c617-449e-a8b0-bbcda894fa3c
+		sourceLineageTag: cfa15294-b50d-49c7-b4de-9bcf7f601dd8
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: plate_number
+
+		annotation SummarizationSetBy = User
+
+	column vehicle_brand
+		dataType: string
+		lineageTag: ef26c85c-88ba-4f37-8d2b-b0658fbda0ae
+		sourceLineageTag: fd61d26a-1288-4ce8-a6ea-a85c2edb7604
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: vehicle_brand
+
+		annotation SummarizationSetBy = User
+
+	column vehicle_model
+		dataType: string
+		lineageTag: 25ea7c31-ca02-4aef-a5c8-0d002ac2c08f
+		sourceLineageTag: 59f33eb8-4bb8-46a6-8318-f62e5f0adb04
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: vehicle_model
+
+		annotation SummarizationSetBy = User
+
+	column manufacture_year
+		dataType: int64
+		formatString: 0
+		lineageTag: e3ffa9c4-8f7f-40f9-9c26-e856cc3b38c5
+		sourceLineageTag: 00186788-34e2-4b83-9c9f-8d50647b2152
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: manufacture_year
+
+		annotation SummarizationSetBy = User
+
+	column vehicle_value
+		dataType: double
+		lineageTag: 53386dca-cb05-4672-9b07-0d9a256ff001
+		sourceLineageTag: 079f1fe9-3d1c-4413-b264-f8318e5e354c
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: vehicle_value
+
+		annotation SummarizationSetBy = User
+
+	column is_deleted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 47c17843-f050-48aa-9243-81cef2348684
+		sourceLineageTag: 6cd1099d-d83a-451e-9fce-f280f4aa79fd
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: is_deleted
+
+		annotation SummarizationSetBy = User
+
+	partition dimvehicle = entity
+		mode: directQuery
+		source
+			entityName: dimvehicle
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

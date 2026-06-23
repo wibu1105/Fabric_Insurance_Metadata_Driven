@@ -1,0 +1,148 @@
+table cfg_silver_gold_table
+	lineageTag: 175a2320-7d3b-4ab0-a9fd-5b79d9c9d3d1
+	sourceLineageTag: [cfg].[cfg_silver_gold_table]
+
+	column table_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 40529e98-8d35-4fb7-b874-1c98c55a5fad
+		sourceLineageTag: table_id
+		summarizeBy: none
+		sourceColumn: table_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column layer_name
+		dataType: string
+		lineageTag: 74d9b10a-6edd-4832-bd5d-5bca3d0ece98
+		sourceLineageTag: layer_name
+		summarizeBy: none
+		sourceColumn: layer_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column target_schema
+		dataType: string
+		lineageTag: fe6f777c-3946-4176-872d-be435cfef0e3
+		sourceLineageTag: target_schema
+		summarizeBy: none
+		sourceColumn: target_schema
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column target_table
+		dataType: string
+		lineageTag: 2c7a3a51-4595-4399-8ba5-85d88ecdfba7
+		sourceLineageTag: target_table
+		summarizeBy: none
+		sourceColumn: target_table
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_key_column
+		dataType: string
+		lineageTag: 3ed92264-04c9-420e-b4ca-ffb1c9bc2580
+		sourceLineageTag: primary_key_column
+		summarizeBy: none
+		sourceColumn: primary_key_column
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column watermark_column
+		dataType: string
+		lineageTag: 8d6046f9-1ae7-46b9-bf17-29997e5fb43f
+		sourceLineageTag: watermark_column
+		summarizeBy: none
+		sourceColumn: watermark_column
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_type
+		dataType: string
+		lineageTag: ef6b9c65-f31e-4642-8f21-c349075d2363
+		sourceLineageTag: load_type
+		summarizeBy: none
+		sourceColumn: load_type
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column dependency_level
+		dataType: int64
+		formatString: 0
+		lineageTag: f9b27094-5b78-4a73-9d0d-92ad1a3be57a
+		sourceLineageTag: dependency_level
+		summarizeBy: none
+		sourceColumn: dependency_level
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_active
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fd047445-d633-47e1-a107-dab836184c10
+		sourceLineageTag: is_active
+		summarizeBy: none
+		sourceColumn: is_active
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column created_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0b6767c3-af75-49af-b91d-a0d27f446891
+		sourceLineageTag: created_date
+		summarizeBy: none
+		sourceColumn: created_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column updated_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 702f0034-207e-4ae1-a901-3feb89240869
+		sourceLineageTag: updated_date
+		summarizeBy: none
+		sourceColumn: updated_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column notebook_name
+		dataType: string
+		lineageTag: 734f55ab-7e6d-4055-93b0-cac83fbf3a74
+		sourceLineageTag: notebook_name
+		summarizeBy: none
+		sourceColumn: notebook_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition cfg_silver_gold_table = entity
+		mode: directLake
+		source
+			entityName: cfg_silver_gold_table
+			schemaName: cfg
+			expressionSource: 'DirectLake - Rookie2Engineer_Warehouse'
+

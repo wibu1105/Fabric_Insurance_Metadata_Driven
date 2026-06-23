@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "QuotationSalesDashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "8075619d-2499-a618-4733-5ee3e4d5b811"
+  }
+}

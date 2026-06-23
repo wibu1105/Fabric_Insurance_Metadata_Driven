@@ -1,0 +1,272 @@
+cultureInfo en-US
+
+	linguisticMetadata =
+			{
+			  "Version": "2.0.0",
+			  "Language": "en-US",
+			  "Entities": {
+			    "table_measure.refundamount": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_measure",
+			          "ConceptualProperty": "RefundAmount"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Refund Amount": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_measure.visual_hack__count_bar": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_measure",
+			          "ConceptualProperty": "Visual Hack - Count Bar"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "table_measure.expired_policy_count": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_measure",
+			          "ConceptualProperty": "Expired Policy Count"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Policies Expired": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_measure.issue_policy": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_measure",
+			          "ConceptualProperty": "Issue Policy"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Policies Issued": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_measure.cancellation_count": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_measure",
+			          "ConceptualProperty": "Cancellation Count"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Policies Cancelled": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "factpayment.payment_id": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "factpayment",
+			          "ConceptualProperty": "payment_id"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Payment ID": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dimdate.full_date": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dimdate",
+			          "ConceptualProperty": "full_date"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Date": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dimpolicyinfo.policy_id": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dimpolicyinfo",
+			          "ConceptualProperty": "policy_id"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Policy ID": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dimcustomer.full_name": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dimcustomer",
+			          "ConceptualProperty": "full_name"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Customer": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "factpayment.payment_status": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "factpayment",
+			          "ConceptualProperty": "payment_status"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Status": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "factpayment.transaction_reference": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "factpayment",
+			          "ConceptualProperty": "transaction_reference"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Transaction Reference": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dimpaymenttype.payment_method": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dimpaymenttype",
+			          "ConceptualProperty": "payment_method"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Payment Method": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_measure.actual_collected_premium": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_measure",
+			          "ConceptualProperty": "Actual Collected Premium"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Net Premium": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    }
+			  }
+			}
+		contentType: json
+

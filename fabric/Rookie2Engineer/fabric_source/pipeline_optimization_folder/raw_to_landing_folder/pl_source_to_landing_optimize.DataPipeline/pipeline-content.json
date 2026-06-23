@@ -1,0 +1,1189 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "v_audit_session_id",
+          "value": {
+            "value": "@string(guid())",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SV_Audit_Session_Id",
+        "dependsOn": []
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderQuery": "SELECT *\r\nFROM cfg.cfg_landing_bronze_table\r\nWHERE destination_schema = 'landing' and is_active = 'True'",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "DataWarehouseTable",
+            "schema": [],
+            "linkedService": {
+              "name": "Rookie2Engineer_Warehouse",
+              "properties": {
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                  "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "LK_Landing_Config",
+        "dependsOn": [
+          {
+            "activity": "Insert_audit_session_log",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": false,
+          "batchCount": 3,
+          "items": {
+            "value": "@activity('LK_Landing_Config').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "IfCondition",
+              "typeProperties": {
+                "expression": {
+                  "value": "@equals(item().source_system,'SQLServer_CRM')",
+                  "type": "Expression"
+                },
+                "ifTrueActivities": [
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "v_sql_query",
+                      "value": {
+                        "value": "@if(equals(toLower(item().load_type),'incremental'),concat('SELECT *, GETDATE() AS _etl_date, ''' , variables('v_audit_session_id'), ''' AS _etl_audit_session_id, ''' , variables('v_audit_table_session_id'), ''' AS _etl_audit_table_session_id FROM [', item().source_schema, '].[', item().source_table, '] WHERE [', item().source_watermark_column, '] > CAST(''', activity('Lookup_get_previous_watermark').output.firstRow.previous_watermark_value, ''' AS datetime2)'),concat('SELECT *, GETDATE() AS _etl_date, ''' , variables('v_audit_session_id'), ''' AS _etl_audit_session_id, ''' , variables('v_audit_table_session_id'), ''' AS _etl_audit_table_session_id FROM [', item().source_schema, '].[', item().source_table, ']'))",
+                        "type": "Expression"
+                      }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "SV_SQL_Query_By_Load_Type",
+                    "dependsOn": [
+                      {
+                        "activity": "Lookup_get_previous_watermark",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Copy",
+                    "typeProperties": {
+                      "source": {
+                        "type": "FabricSqlDatabaseSource",
+                        "sqlReaderQuery": {
+                          "value": "@variables('v_sql_query')",
+                          "type": "Expression"
+                        },
+                        "partitionOption": "None",
+                        "queryTimeout": "02:00:00",
+                        "datasetSettings": {
+                          "type": "FabricSqlDatabaseTable",
+                          "typeProperties": {
+                            "schema": {
+                              "value": "@concat(item().source_schema)",
+                              "type": "Expression"
+                            },
+                            "table": {
+                              "value": "@concat(item().source_table)",
+                              "type": "Expression"
+                            }
+                          },
+                          "schema": [],
+                          "connectionSettings": {
+                            "name": "insurance_crm_db",
+                            "properties": {
+                              "type": "FabricSqlDatabase",
+                              "typeProperties": {
+                                "artifactId": "de82704f-d234-4a2f-85b2-52b8ccdf0dd0",
+                                "workspaceId": "99cde796-57e8-4e54-8eb6-b5ac684ade45"
+                              },
+                              "externalReferences": {
+                                "connection": "9b0afcbe-9b9a-4874-ae06-ecaa7865475e"
+                              },
+                              "annotations": []
+                            }
+                          },
+                          "annotations": []
+                        }
+                      },
+                      "sink": {
+                        "type": "LakehouseTableSink",
+                        "tableActionOption": "Append",
+                        "applyVOrder": false,
+                        "datasetSettings": {
+                          "type": "LakehouseTable",
+                          "typeProperties": {
+                            "schema": {
+                              "value": "@concat(item().destination_schema)",
+                              "type": "Expression"
+                            },
+                            "table": {
+                              "value": "@concat(item().destination_table)",
+                              "type": "Expression"
+                            }
+                          },
+                          "schema": [],
+                          "linkedService": {
+                            "name": "Rookie2Engineer_Lakehouse",
+                            "properties": {
+                              "type": "Lakehouse",
+                              "typeProperties": {
+                                "artifactId": "5003935f-2501-a066-4390-112c1abd17a2",
+                                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                                "rootFolder": "Tables"
+                              },
+                              "annotations": []
+                            }
+                          },
+                          "annotations": []
+                        }
+                      },
+                      "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                          "allowDataTruncation": true,
+                          "treatBooleanAsNumber": false
+                        }
+                      },
+                      "enableStaging": false
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 3,
+                      "retryIntervalInSeconds": 120,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "CP_SQL_Table_To_Landing",
+                    "dependsOn": [
+                      {
+                        "activity": "SV_SQL_Query_By_Load_Type",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "v_processed_rows",
+                      "value": {
+                        "value": "@string(activity('CP_SQL_Table_To_Landing').output.rowsCopied)",
+                        "type": "Expression"
+                      }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "SV_SQL_Processed_Rows",
+                    "dependsOn": [
+                      {
+                        "activity": "CP_SQL_Table_To_Landing",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Fail",
+                    "typeProperties": {
+                      "message": {
+                        "value": "@activity('CP_SQL_Table_To_Landing').error.message",
+                        "type": "Expression"
+                      },
+                      "errorCode": "COPY_DATA_FAILED"
+                    },
+                    "name": "Fail_Stop_SQL_Branch",
+                    "dependsOn": [
+                      {
+                        "activity": "Update_audit_table_session_log_Failed",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SqlServerStoredProcedure",
+                    "typeProperties": {
+                      "storedProcedureName": "[audit].[sp_insert_error_log]",
+                      "storedProcedureParameters": {
+                        "audit_table_session_id": {
+                          "value": {
+                            "value": "@variables('v_audit_table_session_id')",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        },
+                        "error_code": {
+                          "value": "COPY ERROR",
+                          "type": "String"
+                        },
+                        "error_name": {
+                          "value": {
+                            "value": "@activity('CP_SQL_Table_To_Landing').error.message",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        },
+                        "step_name": {
+                          "value": "CP_SQL_Table_To_Landing",
+                          "type": "String"
+                        }
+                      }
+                    },
+                    "linkedService": {
+                      "name": "Rookie2Engineer_Warehouse",
+                      "properties": {
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                          "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                          "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 2,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Insert_audit_error_log",
+                    "dependsOn": [
+                      {
+                        "activity": "CP_SQL_Table_To_Landing",
+                        "dependencyConditions": [
+                          "Failed"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SqlServerStoredProcedure",
+                    "typeProperties": {
+                      "storedProcedureName": "[audit].[sp_audit_table_session_log]",
+                      "storedProcedureParameters": {
+                        "action": {
+                          "value": "failed",
+                          "type": "String"
+                        },
+                        "audit_table_session_id": {
+                          "value": {
+                            "value": "@variables('v_audit_table_session_id')",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        }
+                      }
+                    },
+                    "linkedService": {
+                      "name": "Rookie2Engineer_Warehouse",
+                      "properties": {
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                          "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                          "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 2,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Update_audit_table_session_log_Failed",
+                    "dependsOn": [
+                      {
+                        "activity": "Insert_audit_error_log",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Lookup",
+                    "typeProperties": {
+                      "source": {
+                        "type": "DataWarehouseSource",
+                        "sqlReaderQuery": {
+                          "value": "SELECT\n    COALESCE(\n        MAX(last_watermark_value),\n        CAST('1900-01-01 00:00:00' AS DATETIME2)\n    ) AS previous_watermark_value\nFROM cfg.cfg_table_watermark\nWHERE table_id = @{item().table_id}",
+                          "type": "Expression"
+                        },
+                        "partitionOption": "None",
+                        "queryTimeout": "02:00:00"
+                      },
+                      "datasetSettings": {
+                        "type": "DataWarehouseTable",
+                        "typeProperties": {
+                          "schema": "cfg",
+                          "table": "cfg_table_watermark"
+                        },
+                        "schema": [],
+                        "linkedService": {
+                          "name": "Rookie2Engineer_Warehouse",
+                          "properties": {
+                            "type": "DataWarehouse",
+                            "typeProperties": {
+                              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                              "workspaceId": "00000000-0000-0000-0000-000000000000"
+                            },
+                            "annotations": []
+                          }
+                        },
+                        "annotations": []
+                      },
+                      "firstRowOnly": true
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Lookup_get_previous_watermark",
+                    "dependsOn": []
+                  }
+                ],
+                "ifFalseActivities": [
+                  {
+                    "type": "Copy",
+                    "typeProperties": {
+                      "source": {
+                        "type": "BinarySource",
+                        "formatSettings": {
+                          "type": "BinaryReadSettings"
+                        },
+                        "storeSettings": {
+                          "type": "AzureBlobStorageReadSettings",
+                          "recursive": true
+                        },
+                        "datasetSettings": {
+                          "type": "Binary",
+                          "typeProperties": {
+                            "location": {
+                              "type": "LakehouseLocation",
+                              "folderPath": {
+                                "value": "@concat('source/json/', item().source_table)",
+                                "type": "Expression"
+                              },
+                              "fileName": {
+                                "value": "@if(equals(item().load_type,'full'),concat(item().source_table,'_full_',pipeline().parameters.p_batch_date,'.json'),concat(item().source_table,'_',pipeline().parameters.p_batch_date,'.json'))",
+                                "type": "Expression"
+                              }
+                            }
+                          },
+                          "linkedService": {
+                            "name": "Rookie2Engineer_Lakehouse",
+                            "properties": {
+                              "type": "Lakehouse",
+                              "typeProperties": {
+                                "artifactId": "5003935f-2501-a066-4390-112c1abd17a2",
+                                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                                "rootFolder": "Files"
+                              },
+                              "annotations": []
+                            }
+                          },
+                          "annotations": []
+                        }
+                      },
+                      "sink": {
+                        "type": "BinarySink",
+                        "storeSettings": {
+                          "type": "AzureBlobStorageWriteSettings"
+                        },
+                        "datasetSettings": {
+                          "type": "Binary",
+                          "typeProperties": {
+                            "location": {
+                              "type": "LakehouseLocation",
+                              "folderPath": {
+                                "value": "@concat(item().destination_schema, '/', item().source_system, '/', item().destination_table, '/batch_date=', pipeline().parameters.p_batch_date)",
+                                "type": "Expression"
+                              },
+                              "fileName": {
+                                "value": "@if(equals(item().load_type,'full'),concat(item().source_table,'_full_',pipeline().parameters.p_batch_date,'.json'),concat(item().source_table,'_',pipeline().parameters.p_batch_date,'.json'))",
+                                "type": "Expression"
+                              }
+                            }
+                          },
+                          "linkedService": {
+                            "name": "Rookie2Engineer_Lakehouse",
+                            "properties": {
+                              "type": "Lakehouse",
+                              "typeProperties": {
+                                "artifactId": "5003935f-2501-a066-4390-112c1abd17a2",
+                                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                                "rootFolder": "Files"
+                              },
+                              "annotations": []
+                            }
+                          },
+                          "annotations": []
+                        }
+                      },
+                      "enableStaging": false
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 3,
+                      "retryIntervalInSeconds": 120,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "CP_JSON_File_To_Landing",
+                    "dependsOn": []
+                  },
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "v_processed_rows",
+                      "value": "1"
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "SV_JSON_Processed_Rows",
+                    "dependsOn": [
+                      {
+                        "activity": "CP_JSON_File_To_Landing",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "v_audit_error_id",
+                      "value": {
+                        "value": "@string(guid())",
+                        "type": "Expression"
+                      }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "SV_JSON_Audit_Error_Id",
+                    "dependsOn": [
+                      {
+                        "activity": "CP_JSON_File_To_Landing",
+                        "dependencyConditions": [
+                          "Failed"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Fail",
+                    "typeProperties": {
+                      "message": {
+                        "value": "@activity('CP_JSON_File_To_Landing').error.message",
+                        "type": "Expression"
+                      },
+                      "errorCode": "JSON_COPY_FAILED"
+                    },
+                    "name": "Fail_Stop_JSON_Branch",
+                    "dependsOn": [
+                      {
+                        "activity": "Update_JSON_audit_table_session_log_Failed",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SqlServerStoredProcedure",
+                    "typeProperties": {
+                      "storedProcedureName": "[audit].[sp_insert_error_log]",
+                      "storedProcedureParameters": {
+                        "audit_table_session_id": {
+                          "value": {
+                            "value": "@variables('v_audit_table_session_id')",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        },
+                        "step_name": {
+                          "value": "CP_JSON_File_To_Landing",
+                          "type": "String"
+                        },
+                        "error_code": {
+                          "value": {
+                            "value": "@activity('CP_JSON_File_To_Landing').error.errorCode",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        },
+                        "error_name": {
+                          "value": {
+                            "value": "@activity('CP_JSON_File_To_Landing').error.message",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        }
+                      }
+                    },
+                    "linkedService": {
+                      "name": "Rookie2Engineer_Warehouse",
+                      "properties": {
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                          "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                          "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Insert_JSON_error_message",
+                    "dependsOn": [
+                      {
+                        "activity": "SV_JSON_Audit_Error_Id",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SqlServerStoredProcedure",
+                    "typeProperties": {
+                      "storedProcedureName": "[audit].[sp_audit_table_session_log]",
+                      "storedProcedureParameters": {
+                        "action": {
+                          "value": "failed",
+                          "type": "String"
+                        },
+                        "audit_table_session_id": {
+                          "value": {
+                            "value": "@variables('v_audit_table_session_id')",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        }
+                      }
+                    },
+                    "linkedService": {
+                      "name": "Rookie2Engineer_Warehouse",
+                      "properties": {
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                          "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                          "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Update_JSON_audit_table_session_log_Failed",
+                    "dependsOn": [
+                      {
+                        "activity": "Insert_JSON_error_message",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "name": "IF_Source_System_SQLServer_CRM",
+              "dependsOn": [
+                {
+                  "activity": "Update_audit_table_session_log_Running",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "IfCondition",
+              "typeProperties": {
+                "expression": {
+                  "value": "@and(equals(item().source_system,'SQLServer_CRM'),equals(toLower(item().load_type),'incremental'))",
+                  "type": "Expression"
+                },
+                "ifTrueActivities": [
+                  {
+                    "type": "Script",
+                    "typeProperties": {
+                      "scripts": [
+                        {
+                          "text": {
+                            "value": "MERGE cfg.cfg_table_watermark AS tgt\nUSING (\n    SELECT\n        CAST('@{item().table_id}' AS INT) AS table_id,\n        CAST(\n            '@{activity('Lookup_get_max_watermark').output.firstRow.max_watermark_value}'\n            AS DATETIME2\n        ) AS last_watermark_value,\n        '@{variables('v_audit_session_id')}' AS last_audit_session\n) AS src\nON tgt.table_id = src.table_id\nWHEN MATCHED THEN\n    UPDATE SET\n        last_watermark_value = src.last_watermark_value,\n        last_audit_session = src.last_audit_session,\n        last_load_time = CURRENT_TIMESTAMP,\n        updated_date = CURRENT_TIMESTAMP\nWHEN NOT MATCHED THEN\n    INSERT (\n        table_id,\n        last_watermark_value,\n        last_audit_session,\n        last_load_time,\n        created_date,\n        updated_date\n    )\n    VALUES (\n        src.table_id,\n        src.last_watermark_value,\n        src.last_audit_session,\n        CURRENT_TIMESTAMP,\n        CURRENT_TIMESTAMP,\n        CURRENT_TIMESTAMP\n    );",
+                            "type": "Expression"
+                          },
+                          "type": "Query"
+                        }
+                      ],
+                      "scriptBlockExecutionTimeout": "02:00:00"
+                    },
+                    "linkedService": {
+                      "name": "Rookie2Engineer_Warehouse",
+                      "properties": {
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                          "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                          "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Update_Watermark_Value",
+                    "dependsOn": [
+                      {
+                        "activity": "Lookup_get_max_watermark",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "TridentNotebook",
+                    "typeProperties": {
+                      "notebookId": "455d4833-e7f8-bbff-4a62-1bf6dc4bb371",
+                      "workspaceId": "00000000-0000-0000-0000-000000000000",
+                      "parameters": {
+                        "event_type": {
+                          "value": "GET_MAX_WATERMARK",
+                          "type": "string"
+                        },
+                        "destination_schema": {
+                          "value": {
+                            "value": "@item().destination_schema",
+                            "type": "Expression"
+                          },
+                          "type": "string"
+                        },
+                        "destination_table": {
+                          "value": {
+                            "value": "@item().destination_table",
+                            "type": "Expression"
+                          },
+                          "type": "string"
+                        },
+                        "watermark_column": {
+                          "value": {
+                            "value": "@item().source_watermark_column",
+                            "type": "Expression"
+                          },
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 3,
+                      "retryIntervalInSeconds": 180,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Lookup_get_max_watermark",
+                    "dependsOn": []
+                  }
+                ],
+                "ifFalseActivities": [
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "v_watermark_action",
+                      "value": {
+                        "value": "@concat('SKIPPED_WATERMARK_FULL_LOAD_', string(item().table_id))",
+                        "type": "Expression"
+                      }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "SV_Skip_Watermark_For_Full_Load",
+                    "dependsOn": []
+                  }
+                ]
+              },
+              "name": "IF_SQL_Load_Type_Incremental",
+              "dependsOn": [
+                {
+                  "activity": "IF_Source_System_SQLServer_CRM",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SqlServerStoredProcedure",
+              "typeProperties": {
+                "storedProcedureName": "[audit].[sp_audit_table_session_log]",
+                "storedProcedureParameters": {
+                  "action": {
+                    "value": "running",
+                    "type": "String"
+                  },
+                  "audit_table_session_id": {
+                    "value": {
+                      "value": "@activity('Insert_audit_table_session_log').output.resultSets[0].rows[0].audit_table_session_id",
+                      "type": "Expression"
+                    },
+                    "type": "String"
+                  }
+                }
+              },
+              "linkedService": {
+                "name": "Rookie2Engineer_Warehouse",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                    "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Update_audit_table_session_log_Running",
+              "dependsOn": [
+                {
+                  "activity": "Insert_audit_table_session_log",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SqlServerStoredProcedure",
+              "typeProperties": {
+                "storedProcedureName": "[audit].[sp_audit_table_session_log]",
+                "storedProcedureParameters": {
+                  "action": {
+                    "value": "success",
+                    "type": "String"
+                  },
+                  "audit_table_session_id": {
+                    "value": {
+                      "value": "@activity('Insert_audit_table_session_log').output.resultSets[0].rows[0].audit_table_session_id",
+                      "type": "Expression"
+                    },
+                    "type": "String"
+                  },
+                  "processed_rows": {
+                    "value": {
+                      "value": "@variables('v_processed_rows')",
+                      "type": "Expression"
+                    },
+                    "type": "Int32"
+                  }
+                }
+              },
+              "linkedService": {
+                "name": "Rookie2Engineer_Warehouse",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                    "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Update_audit_table_session_log_Success",
+              "dependsOn": [
+                {
+                  "activity": "IF_SQL_Load_Type_Incremental",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Script",
+              "typeProperties": {
+                "scripts": [
+                  {
+                    "text": {
+                      "value": "@concat(\n'EXEC audit.sp_audit_table_session_log ',\n'@action = ''insert'', ',\n'@audit_session_id = ''', variables('v_audit_session_id'), ''', ',\n'@table_id = ', string(item().table_id), ', ',\n'@layer_name = ''', item().destination_schema, ''', ',\n'@load_type = ''', item().load_type, ''';'\n)",
+                      "type": "Expression"
+                    },
+                    "type": "Query"
+                  }
+                ],
+                "scriptBlockExecutionTimeout": "02:00:00"
+              },
+              "linkedService": {
+                "name": "Rookie2Engineer_Warehouse",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                    "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Insert_audit_table_session_log",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "FE_Landing_Config",
+        "dependsOn": [
+          {
+            "activity": "Update_audit_session_log_Running",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_session_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "insert",
+              "type": "String"
+            },
+            "audit_batch_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_audit_batch_id",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "audit_session_id": {
+              "value": {
+                "value": "@variables('v_audit_session_id')",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "pipeline_name": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "triggered_by": {
+              "value": {
+                "value": "@pipeline().parameters.p_triggered_by",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Insert_audit_session_log",
+        "dependsOn": [
+          {
+            "activity": "SV_Audit_Session_Id",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_session_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "running",
+              "type": "String"
+            },
+            "audit_session_id": {
+              "value": {
+                "value": "@variables('v_audit_session_id')",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Update_audit_session_log_Running",
+        "dependsOn": [
+          {
+            "activity": "LK_Landing_Config",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_session_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "success",
+              "type": "String"
+            },
+            "audit_session_id": {
+              "value": {
+                "value": "@variables('v_audit_session_id')",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Update_audit_session_log_Success",
+        "dependsOn": [
+          {
+            "activity": "FE_Landing_Config",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_session_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "failed",
+              "type": "String"
+            },
+            "audit_session_id": {
+              "value": {
+                "value": "@variables('v_audit_session_id')",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Update_audit_session_log_Failed",
+        "dependsOn": [
+          {
+            "activity": "FE_Landing_Config",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "p_audit_batch_id": {
+        "type": "string",
+        "defaultValue": "BATCH_MANUAL_20260601"
+      },
+      "p_batch_date": {
+        "type": "string",
+        "defaultValue": "2026-05-25"
+      },
+      "p_triggered_by": {
+        "type": "string",
+        "defaultValue": "system"
+      }
+    },
+    "variables": {
+      "v_audit_session_id": {
+        "type": "String"
+      },
+      "v_audit_table_session_id": {
+        "type": "String"
+      },
+      "v_audit_error_id": {
+        "type": "String"
+      },
+      "v_sql_query": {
+        "type": "String"
+      },
+      "v_watermark_action": {
+        "type": "String"
+      },
+      "v_processed_rows": {
+        "type": "String"
+      }
+    }
+  }
+}

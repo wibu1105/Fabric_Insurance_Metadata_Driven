@@ -1,0 +1,33 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["DirectLake - Rookie2Engineer_Lakehouse","DirectLake - Rookie2Engineer_Warehouse"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DirectLakeOnOneLakeInWeb","WebModelingEdit"]
+
+ref table _measures
+ref table DateParameter
+ref table dimdate
+ref table DimLayer
+ref table DimStatus
+ref table cfg_landing_bronze_table
+ref table cfg_silver_gold_table
+ref table cfg_table_watermark
+ref table audit_batch_log
+ref table audit_session_log
+ref table audit_table_session_log
+ref table audit_error_log
+ref table audit_invalid_record
+ref table bronze_silver_orphan_record_summary
+ref table bronze_silver_rowcount_reconciliation
+ref table bronze_silver_duplicate_summary
+ref table silvervalidationresults
+ref table 'DQ Categories'
+

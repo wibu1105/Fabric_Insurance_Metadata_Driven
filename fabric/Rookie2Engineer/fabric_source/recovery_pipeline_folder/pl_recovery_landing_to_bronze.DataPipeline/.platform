@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "pl_recovery_landing_to_bronze"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "4ab0aee1-9a3a-9a9a-4db6-fd4b57f3c5a8"
+  }
+}

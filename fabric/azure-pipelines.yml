@@ -1,0 +1,96 @@
+trigger:
+  branches:
+    include:
+      - test
+
+  paths:
+    include:
+      - **/**
+      
+
+
+
+variables:
+  - name: target_env
+    value: 'test'
+
+  - group: 
+  - group: 
+
+stages:
+- stage: DeployToFabric
+  displayName: "Deploy to TEST Fabric Workspace"
+
+  jobs:
+  - deployment: DeployFabric
+    displayName: "Deploy Fabric Resources"
+
+    environment: test
+
+    #pool:
+      #vmImage: default
+    # name: default 
+    pool:
+      name: host
+
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+
+          - checkout: self
+            fetchDepth: 0
+
+
+          - script: |
+              echo "Environment: $(target_env)"
+              echo "Workspace: $(wk_name)"
+              echo "GitDirectory: $(dir)"
+            displayName: "Debug Variables"
+
+    # --- Create an isolated venv from Python 3.12 (full path; the py launcher is broken on this agent) ---
+          - script: |
+              "C:\Users\ACER......\Python312\python.exe" -m venv .venv
+              call .venv\Scripts\activate.bat
+              python --version
+              python -m pip install --upgrade pip
+              pip install --upgrade fabric-cicd azure-identity requests
+            displayName: "Create venv (3.12) + install deps"
+ 
+          # --- Prove the venv is 3.12 and fabric-cicd installed ---
+          - script: |
+              call .venv\Scripts\activate.bat
+              python --version
+              pip show fabric-cicd
+            displayName: "Verify venv Python + fabric-cicd"
+          
+          - script: |
+              call .venv\Scripts\activate.bat
+              python -c "import os,sys; s='$(azspsecret)'; print('len:', len(s)); print('first2:', s[:2]); print('last2:', s[-2:]); print('has_tilde:', '~' in s)"
+            displayName: "Debug secret shape"
+
+          - script: |
+              call .venv\Scripts\activate.bat
+              python .....\clean_visual_json.py ...
+            displayName: "Pre-clean report visuals"
+
+          - script: |
+                call .venv\Scripts\activate.bat
+                python Rookie2Engineer\deploy-to-fabric.py ^
+                  --aztenantid %AZTENANTID% ^
+                  --azclientid %AZCLIENTID% ^
+                  --azspsecret %AZSPSECRET% ^
+                  --target_env $(target_env) ^
+                  --items_in_scope $(ItemsInScope)
+            displayName: "Deploy to Fabric"
+            env:
+              AZTENANTID: $(aztenantid)
+              AZCLIENTID: $(azclientid)
+              AZSPSECRET: $(azspsecret)
+
+
+
+          - script: |
+              echo ItemsInScope=$(ItemsInScope)
+            displayName: "Debug Item Scope"
+         

@@ -1,0 +1,369 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "p_audit_session_id",
+          "value": {
+            "value": "@string(guid())",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "set audit_session_id",
+        "dependsOn": []
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderQuery": "select * from cfg.cfg_landing_bronze_table where destination_schema = 'bronze' and is_active = 'True'",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "DataWarehouseTable",
+            "typeProperties": {
+              "schema": "cfg",
+              "table": "cfg_landing_bronze_table"
+            },
+            "schema": [],
+            "linkedService": {
+              "name": "Rookie2Engineer_Warehouse",
+              "properties": {
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+                  "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Lookup cfg_landing_bronze_table",
+        "dependsOn": [
+          {
+            "activity": "Insert audit_session_log",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "4d04d5f0-22f0-8bd5-4e92-0631c0f30c6a",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "audit_session_id": {
+              "value": {
+                "value": "@variables('p_audit_session_id')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "rows": {
+              "value": {
+                "value": "@string(activity('Lookup cfg_landing_bronze_table').output.value)",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "fail_fast": {
+              "value": "true",
+              "type": "string"
+            },
+            "audit_sink": {
+              "value": "warehouse",
+              "type": "string"
+            },
+            "audit_warehouse_name": {
+              "value": "Rookie2Engineer_Warehouse",
+              "type": "string"
+            },
+            "audit_warehouse_workspace_id": {
+              "value": "5db1b4b5-9a8b-4bf9-808d-ed9af21bd9a8",
+              "type": "string"
+            },
+            "audit_warehouse_id": {
+              "value": "0cbc1668-221f-4824-865d-49e8e013e43e",
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "1:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_bronze",
+        "dependsOn": [
+          {
+            "activity": "Update audit_session_log_Running",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_session_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "insert",
+              "type": "String"
+            },
+            "audit_batch_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_audit_batch_id",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "audit_session_id": {
+              "value": {
+                "value": "@variables('p_audit_session_id')",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "pipeline_name": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "triggered_by": {
+              "value": {
+                "value": "@pipeline().parameters.p_triggered_by",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Insert audit_session_log",
+        "dependsOn": [
+          {
+            "activity": "set audit_session_id",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_session_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "running",
+              "type": "String"
+            },
+            "audit_session_id": {
+              "value": {
+                "value": "@variables('p_audit_session_id')",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Update audit_session_log_Running",
+        "dependsOn": [
+          {
+            "activity": "Lookup cfg_landing_bronze_table",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_session_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "success",
+              "type": "String"
+            },
+            "audit_session_id": {
+              "value": {
+                "value": "@variables('p_audit_session_id')",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Update audit_session_log_Success",
+        "dependsOn": [
+          {
+            "activity": "nb_bronze",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[audit].[sp_audit_session_log]",
+          "storedProcedureParameters": {
+            "action": {
+              "value": "failed",
+              "type": "String"
+            },
+            "audit_session_id": {
+              "value": {
+                "value": "@variables('p_audit_session_id')",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "Rookie2Engineer_Warehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "e013e43e-49e8-865d-4824-221f0cbc1668",
+              "endpoint": "3ukzqa5oadlurln3behjhxf4ae-ww2lcxmltl4uxaen5wnpeg6zva.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Update audit_session_log_Failed",
+        "dependsOn": [
+          {
+            "activity": "nb_bronze",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "p_audit_batch_id": {
+        "type": "string"
+      },
+      "p_triggered_by": {
+        "type": "string",
+        "defaultValue": "system"
+      }
+    },
+    "variables": {
+      "p_audit_session_id": {
+        "type": "String"
+      },
+      "p_audit_table_session_id": {
+        "type": "String"
+      },
+      "v_sql_query": {
+        "type": "String"
+      },
+      "v_table_id": {
+        "type": "String"
+      },
+      "p_audit_error_id": {
+        "type": "String"
+      },
+      "for_loop_failed": {
+        "type": "Integer",
+        "defaultValue": 0
+      }
+    }
+  }
+}

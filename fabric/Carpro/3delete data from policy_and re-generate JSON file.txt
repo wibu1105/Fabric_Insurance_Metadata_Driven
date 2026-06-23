@@ -1,0 +1,48 @@
+/* =========================================================
+Simulate DELETE operation for incremental load
+========================================================= */
+
+------------------------------------------------------------
+-- STEP 1 — Backup deleted record (optional but recommended)
+------------------------------------------------------------
+
+SELECT *
+INTO #deleted_policy
+FROM policy_info
+WHERE policy_id = 'POL00555';
+
+
+
+------------------------------------------------------------
+-- STEP 2 — Delete record from source table
+------------------------------------------------------------
+
+DELETE FROM policy_info
+WHERE policy_id = 'POL00555';
+
+
+
+------------------------------------------------------------
+-- STEP 3 — Generate DELETE event JSON
+------------------------------------------------------------
+
+SELECT
+    policy_id,
+
+    -- Metadata Columns
+    GETDATE() AS last_updated,
+    'D' AS operation_type,
+    '2026-05-26' AS batch_date,
+    'policy_system' AS source_system
+
+FROM #deleted_policy
+
+FOR JSON PATH;
+
+
+
+------------------------------------------------------------
+-- STEP 4 — Cleanup temp table
+------------------------------------------------------------
+
+DROP TABLE #deleted_policy;

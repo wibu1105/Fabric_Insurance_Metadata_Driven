@@ -1,0 +1,232 @@
+table dimdate
+	lineageTag: 409d783b-c4c1-4ab9-a2b8-e639d0eedadf
+	sourceLineageTag: [gold].[dimdate]
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 9c1efa68-2b42-4781-b9f9-b295a61cca85
+		sourceLineageTag: date_key
+		summarizeBy: sum
+		sourceColumn: date_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column full_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ce892b1d-3d9d-4e6d-a341-ee792bdb1e9c
+		sourceLineageTag: full_date
+		summarizeBy: none
+		sourceColumn: full_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_long_description
+		dataType: string
+		lineageTag: c8efc265-fd82-46a1-8ba4-dc9d9f9d2e1e
+		sourceLineageTag: date_long_description
+		summarizeBy: none
+		sourceColumn: date_long_description
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_short_description
+		dataType: string
+		lineageTag: fa832926-2c6c-4e3c-a1e9-c34a09d2c308
+		sourceLineageTag: date_short_description
+		summarizeBy: none
+		sourceColumn: date_short_description
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_name
+		dataType: string
+		lineageTag: 52de0647-7deb-4ac1-accf-4ed8cc7a5cf1
+		sourceLineageTag: day_name
+		summarizeBy: none
+		sourceColumn: day_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_short_name
+		dataType: string
+		lineageTag: a27a18c0-728b-4d7e-8c67-5c649406bad1
+		sourceLineageTag: day_short_name
+		summarizeBy: none
+		sourceColumn: day_short_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: d0819e86-052e-47e6-8c9f-3e1bc4983e3e
+		sourceLineageTag: month_name
+		summarizeBy: none
+		sourceColumn: month_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_short_name
+		dataType: string
+		lineageTag: 7d60fa2e-0260-40e3-be91-0f3f52175bc1
+		sourceLineageTag: month_short_name
+		summarizeBy: none
+		sourceColumn: month_short_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_year
+		dataType: int64
+		formatString: 0
+		lineageTag: bd2c709c-7f5b-4f99-be09-50d4d1f1dc80
+		sourceLineageTag: day_of_year
+		summarizeBy: sum
+		sourceColumn: day_of_year
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 51ec2a42-c4e4-4840-aa03-a90835470c31
+		sourceLineageTag: week_number
+		summarizeBy: sum
+		sourceColumn: week_number
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week
+		dataType: int64
+		formatString: 0
+		lineageTag: 0528eec9-94b4-4843-95d7-82be8e28e0fa
+		sourceLineageTag: day_of_week
+		summarizeBy: sum
+		sourceColumn: day_of_week
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_number
+		dataType: int64
+		formatString: 0
+		lineageTag: b335d68a-ca24-4e77-9168-7be59c7928d3
+		sourceLineageTag: month_number
+		summarizeBy: sum
+		sourceColumn: month_number
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_month
+		dataType: int64
+		formatString: 0
+		lineageTag: 2f249597-802a-468f-86c6-3b760a7c5a28
+		sourceLineageTag: day_of_month
+		summarizeBy: sum
+		sourceColumn: day_of_month
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 8096d5aa-3711-4e18-84d1-8f888ede5aaf
+		sourceLineageTag: quarter_number
+		summarizeBy: sum
+		sourceColumn: quarter_number
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 8c9a536d-c346-45a9-b65e-41707f257755
+		sourceLineageTag: day_of_quarter
+		summarizeBy: sum
+		sourceColumn: day_of_quarter
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 2f19a48d-ca9d-4567-9531-d0017a810abd
+		sourceLineageTag: year_number
+		summarizeBy: sum
+		sourceColumn: year_number
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: int64
+		formatString: 0
+		lineageTag: d3f5b53e-e17e-47ca-94d5-6442662adae3
+		sourceLineageTag: is_weekend
+		summarizeBy: sum
+		sourceColumn: is_weekend
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_year
+		dataType: string
+		lineageTag: 9256eb4f-9ce3-4c40-b657-fc86e02d949e
+		sourceLineageTag: month_year
+		summarizeBy: none
+		sourceColumn: month_year
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_year_sort
+		dataType: int64
+		formatString: 0
+		lineageTag: 12757093-ea91-47f4-80f4-07ec7c0eaca2
+		sourceLineageTag: month_year_sort
+		summarizeBy: sum
+		sourceColumn: month_year_sort
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimdate = entity
+		mode: directLake
+		source
+			entityName: dimdate
+			schemaName: gold
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

@@ -1,0 +1,50 @@
+table dq_fk_integrity_summary
+	lineageTag: 60437793-4fc0-4f39-9821-3eaf6ab6ca11
+	sourceLineageTag: [validate].[dq_fk_integrity_summary]
+
+	measure 'FK Integrity Status' =
+			
+			IF (
+			    SUM('dq_fk_integrity_summary'[error_count]) > 0,
+			    "Fail",
+			    "Pass"
+			)
+		lineageTag: 836ae9f5-4970-4dd1-ad2a-68148a60fe53
+
+		changedProperty = Name
+
+	column check_name
+		dataType: string
+		lineageTag: 6df1ccff-4717-474a-85e6-946b138af78f
+		sourceLineageTag: check_name
+		summarizeBy: none
+		sourceColumn: check_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column error_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 22bdffed-0996-4e68-8795-4523d32aaa7e
+		sourceLineageTag: error_count
+		summarizeBy: sum
+		sourceColumn: error_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: 4798a7e0-70d7-43a3-8a00-861392d64ad3
+		sourceLineageTag: status
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dq_fk_integrity_summary = entity
+		mode: directLake
+		source
+			entityName: dq_fk_integrity_summary
+			schemaName: validate
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

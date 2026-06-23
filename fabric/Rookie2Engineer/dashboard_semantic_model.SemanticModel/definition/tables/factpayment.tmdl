@@ -1,0 +1,109 @@
+table factpayment
+	lineageTag: 9f96bf39-5a79-4d5f-8af7-82129781b9fc
+	sourceLineageTag: [gold].[factpayment]
+
+	column payment_id
+		dataType: string
+		lineageTag: 29734228-8619-44e1-b77c-ab02d520abcd
+		sourceLineageTag: payment_id
+		summarizeBy: none
+		sourceColumn: payment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: c0a2293e-3cb5-443c-bc71-99ae0e7df982
+		sourceLineageTag: customer_key
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 63abcb36-e69a-4662-8cba-ee74095258f9
+		sourceLineageTag: agent_key
+		summarizeBy: none
+		sourceColumn: agent_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column provider_key
+		dataType: int64
+		formatString: 0
+		lineageTag: d9d93280-7c96-46cc-a708-39a34bc72a82
+		sourceLineageTag: provider_key
+		summarizeBy: none
+		sourceColumn: provider_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column policy_info_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 990a71cb-6fb0-4fa0-a163-1f529ca6196c
+		sourceLineageTag: policy_info_key
+		summarizeBy: none
+		sourceColumn: policy_info_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 87da2792-1ee5-4515-bd3b-047eeedc96e2
+		sourceLineageTag: payment_date_key
+		summarizeBy: none
+		sourceColumn: payment_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_status
+		dataType: string
+		lineageTag: c8ac105f-7658-4cfd-93c0-690db2c91523
+		sourceLineageTag: payment_status
+		summarizeBy: none
+		sourceColumn: payment_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_type_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 3c51c8fb-1970-413e-be63-a72019324270
+		sourceLineageTag: payment_type_key
+		summarizeBy: none
+		sourceColumn: payment_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_amount
+		dataType: double
+		lineageTag: 0fbbdc00-b59c-4f43-8920-297e062b2258
+		sourceLineageTag: payment_amount
+		summarizeBy: sum
+		sourceColumn: payment_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column transaction_reference
+		dataType: string
+		lineageTag: 70fd026c-91f5-4e58-b9e8-09f7633f04fd
+		sourceLineageTag: transaction_reference
+		summarizeBy: none
+		sourceColumn: transaction_reference
+
+		annotation SummarizationSetBy = Automatic
+
+	partition factpayment = entity
+		mode: directLake
+		source
+			entityName: factpayment
+			schemaName: gold
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

@@ -1,0 +1,90 @@
+table factcancellation
+	lineageTag: 33a79b0c-f895-4888-bc2c-53a11bbb1399
+	sourceLineageTag: [gold].[factcancellation]
+
+	column cancellation_id
+		dataType: string
+		lineageTag: f16eb58d-d4b5-4507-b471-5e001683faaf
+		sourceLineageTag: cancellation_id
+		summarizeBy: none
+		sourceColumn: cancellation_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column cancellation_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 7917dacb-3dc4-479c-a7f7-4409ae4c54c8
+		sourceLineageTag: cancellation_date_key
+		summarizeBy: none
+		sourceColumn: cancellation_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 7386c696-b77a-4274-9cea-8f1164688011
+		sourceLineageTag: customer_key
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_key
+		dataType: int64
+		formatString: 0
+		lineageTag: ce726698-4546-412a-a82b-15e33128c089
+		sourceLineageTag: agent_key
+		summarizeBy: none
+		sourceColumn: agent_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column provider_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 41fb5eeb-779e-4a76-bb88-b42f0563f18d
+		sourceLineageTag: provider_key
+		summarizeBy: none
+		sourceColumn: provider_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column policy_info_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 4ba48353-5ffa-4612-b1f5-500386e587e8
+		sourceLineageTag: policy_info_key
+		summarizeBy: none
+		sourceColumn: policy_info_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column cancellation_reason
+		dataType: string
+		lineageTag: 565f4206-8a02-43a6-9359-e416e9f1a7ec
+		sourceLineageTag: cancellation_reason
+		summarizeBy: none
+		sourceColumn: cancellation_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column refund_amount
+		dataType: double
+		lineageTag: 25feb266-dd63-4676-9983-b47a7b1a13c2
+		sourceLineageTag: refund_amount
+		summarizeBy: sum
+		sourceColumn: refund_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition factcancellation = entity
+		mode: directLake
+		source
+			entityName: factcancellation
+			schemaName: gold
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

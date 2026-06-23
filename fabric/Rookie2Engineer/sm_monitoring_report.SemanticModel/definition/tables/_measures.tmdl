@@ -1,0 +1,92 @@
+table _measures
+	lineageTag: 0548761d-98b4-4d8c-b3f3-60fb42cb4305
+
+	measure 'DQ Score' = ```
+			
+			    CALCULATE(
+			        [Total DQ],
+			        silvervalidationresults[status] = "PASS"
+			    )
+			```
+		formatString: 0
+		lineageTag: 903c893f-a0db-4ec5-acb8-dc1c6d06b737
+
+	measure Failed = [Total DQ] - [DQ Score]
+		formatString: 0
+		lineageTag: 7028da55-9a6a-4a52-8413-2378eb31a545
+
+	measure 'Total DQ' = COUNTROWS(silvervalidationresults)
+		formatString: 0
+		lineageTag: 5d4d77d8-f828-450f-88ed-f2e847bfb0d2
+
+	measure 'DQ Score %' =
+			
+			DIVIDE(
+			    CALCULATE(
+			        [Total DQ],
+			        silvervalidationresults[status] = "PASS"
+			    ),
+			    [Total DQ]
+			)
+		lineageTag: c4d09545-8755-4612-8102-74fabb0a776a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Status =
+			
+			VAR CurrentCheck =
+			    SELECTEDVALUE ( 'DQ Categories'[Check] )
+			
+			VAR FailCount =
+			    SWITCH (
+			        CurrentCheck,
+			        "FK Integrity Check",
+			            CALCULATE (
+			                COUNTROWS ( silvervalidationresults ),
+			                silvervalidationresults[check_item] = "FK Integrity Check",
+			                silvervalidationresults[status] <> "PASS"
+			            ),
+			        "PK Duplicate",
+			            CALCULATE (
+			                COUNTROWS ( silvervalidationresults ),
+			                silvervalidationresults[check_item] = "PK Duplicate Check",
+			                silvervalidationresults[status] <> "PASS"
+			            ),
+			        "Row Count",
+			            CALCULATE (
+			                COUNTROWS ( silvervalidationresults ),
+			                silvervalidationresults[check_item] = "Row Count Check",
+			                silvervalidationresults[status] <> "PASS"
+			            )
+			    )
+			
+			RETURN
+			    IF ( FailCount > 0, "FAIL", "PASS" )
+		lineageTag: 0e54c616-b939-4795-9626-e3ac872128b8
+
+	measure 'Silver DQ Status' =
+			
+			IF(
+			    ABS([Total DQ] - [DQ Score]) < 0.01,
+			    "PASS",
+			    "FAIL"
+			)
+		lineageTag: 0147f95c-cbd5-4e59-9589-b612cd3302be
+
+	column Column
+		formatString: 0
+		lineageTag: bd90987b-ded7-46ed-bc0a-6d447b9b725e
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _measures = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 18e396cbce9d4fd5b3ec37f852e104c5
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

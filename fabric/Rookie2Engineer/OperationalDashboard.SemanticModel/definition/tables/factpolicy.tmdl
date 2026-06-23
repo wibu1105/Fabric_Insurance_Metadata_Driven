@@ -1,0 +1,96 @@
+table factpolicy
+	lineageTag: f7bb3998-ad7b-48bd-bfda-7f757b4a5eb5
+	sourceLineageTag: 90b5c05b-c358-452a-a737-5f87da929495
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 0d5f850f-4a6b-495b-8ee2-b8f824c1b25c
+		sourceLineageTag: 1cb4f5f7-23ae-4956-a7f8-75a8723b8987
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = User
+
+	column agent_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 28c2be33-a045-443c-bc98-2ec7c48c8534
+		sourceLineageTag: 87e7d8d8-4a4b-45d4-8fae-dda4b039693f
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: agent_key
+
+		annotation SummarizationSetBy = User
+
+	column provider_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 70c1aaf3-0c24-43af-b6dc-11e9e4a24556
+		sourceLineageTag: a78ee674-7bce-4d57-bb8d-b854d14da9a0
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: provider_key
+
+		annotation SummarizationSetBy = User
+
+	column policy_info_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 30abd941-6f81-4492-a6e9-91ca2c5fc6c0
+		sourceLineageTag: 93efdf7e-5ecb-4afc-9365-f663ab553856
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: policy_info_key
+
+		annotation SummarizationSetBy = User
+
+	column quotation_info_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 173ba652-a0cd-4919-a81c-a0de2b6d0c54
+		sourceLineageTag: a2d01bf8-bcea-43a4-9811-4d4da4b4566e
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: quotation_info_key
+
+		annotation SummarizationSetBy = User
+
+	column policy_status
+		dataType: string
+		lineageTag: 2f7f8d02-644e-44bd-a94f-3e6c131de83f
+		sourceLineageTag: 0f46c922-cc51-472c-85a7-fa981e82fe38
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: policy_status
+
+		annotation SummarizationSetBy = User
+
+	column policy_premium_amount
+		dataType: double
+		lineageTag: 48fde8cb-54e2-48a9-9127-829dc2d76f8a
+		sourceLineageTag: 837afd7b-95f4-489d-b3f2-39e3fc946ebb
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: policy_premium_amount
+
+		annotation SummarizationSetBy = User
+
+	column issue_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 4f3731bf-a9f3-4fbd-92f2-3b74b719049a
+		sourceLineageTag: d193d2b3-4506-4bb3-a1ba-bff43b22bcaa
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: issue_date_key
+
+		annotation SummarizationSetBy = User
+
+	partition factpolicy = entity
+		mode: directQuery
+		source
+			entityName: factpolicy
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

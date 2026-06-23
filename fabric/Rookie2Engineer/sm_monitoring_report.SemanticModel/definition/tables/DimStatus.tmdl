@@ -1,0 +1,48 @@
+table DimStatus
+	lineageTag: 9c5bc483-eb27-497a-8c6e-385c5a5d0ac4
+
+	column Status
+		lineageTag: 697bca14-317a-4cdb-8381-d98445a88ec7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Status]
+		sortByColumn: Order
+
+		annotation SummarizationSetBy = Automatic
+
+	column Order
+		formatString: 0
+		lineageTag: e5700925-b4cc-469e-bcb2-d437c2157cd0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status_Capitalize
+		lineageTag: bf55d145-32da-4246-b2bb-bb109f57ab11
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Status_Capitalize]
+		sortByColumn: Order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimStatus = calculated
+		mode: import
+		source =
+				
+				DATATABLE (
+				    "Status", STRING,
+				    "Status_Capitalize", STRING,
+				    "Order", INTEGER,
+				    {
+				        {"started","Started", 1},
+				        {"running","Running", 2},
+				        {"success","Success", 3},
+				        {"failed","Failed", 4}
+				    }
+				)
+
+	annotation PBI_Id = d3301c121d3f4666b077d767745712ba
+

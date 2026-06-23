@@ -1,0 +1,95 @@
+table factcancellation
+	lineageTag: 2994b102-62ce-4fb4-849d-bb5bcecc6634
+	sourceLineageTag: 33a79b0c-f895-4888-bc2c-53a11bbb1399
+
+	column cancellation_id
+		dataType: string
+		lineageTag: ea1417ee-2314-46de-a859-52466d468512
+		sourceLineageTag: f16eb58d-d4b5-4507-b471-5e001683faaf
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: cancellation_id
+
+		annotation SummarizationSetBy = User
+
+	column cancellation_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 57526961-bb5c-4526-a089-2fc5133b81f3
+		sourceLineageTag: 7917dacb-3dc4-479c-a7f7-4409ae4c54c8
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: cancellation_date_key
+
+		annotation SummarizationSetBy = User
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 5495b990-686c-456c-8276-fdd3d6ab7b42
+		sourceLineageTag: 7386c696-b77a-4274-9cea-8f1164688011
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = User
+
+	column agent_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 2235fccb-3c35-49ef-b7d1-535ce38173ef
+		sourceLineageTag: ce726698-4546-412a-a82b-15e33128c089
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: agent_key
+
+		annotation SummarizationSetBy = User
+
+	column provider_key
+		dataType: int64
+		formatString: 0
+		lineageTag: e5472ac0-d662-4d45-8bcc-43d15544584f
+		sourceLineageTag: 41fb5eeb-779e-4a76-bb88-b42f0563f18d
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: provider_key
+
+		annotation SummarizationSetBy = User
+
+	column policy_info_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 7132630c-872d-403a-a2bd-c0faf4b7bc4a
+		sourceLineageTag: 4ba48353-5ffa-4612-b1f5-500386e587e8
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: policy_info_key
+
+		annotation SummarizationSetBy = User
+
+	column cancellation_reason
+		dataType: string
+		lineageTag: 43e24bc9-37db-4cbc-a025-2a458753b421
+		sourceLineageTag: 565f4206-8a02-43a6-9359-e416e9f1a7ec
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: cancellation_reason
+
+		annotation SummarizationSetBy = User
+
+	column refund_amount
+		dataType: double
+		lineageTag: 2f1d2a45-801f-4d15-9077-d7c42193020c
+		sourceLineageTag: 25feb266-dd63-4676-9983-b47a7b1a13c2
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: refund_amount
+
+		annotation SummarizationSetBy = User
+
+	partition factcancellation = entity
+		mode: directQuery
+		source
+			entityName: factcancellation
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

@@ -1,0 +1,82 @@
+table cfg_table_watermark
+	lineageTag: 7bbc0271-a2fe-4646-8888-21ff376a15eb
+	sourceLineageTag: [cfg].[cfg_table_watermark]
+
+	column table_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e0166e24-b517-4e98-b27f-3b054462c5ae
+		sourceLineageTag: table_id
+		summarizeBy: none
+		sourceColumn: table_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_watermark_value
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 3935cf02-1291-4f80-93f6-5e75c2649bb9
+		sourceLineageTag: last_watermark_value
+		summarizeBy: none
+		sourceColumn: last_watermark_value
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_audit_session
+		dataType: string
+		lineageTag: 07ffc1d7-a124-4211-abc3-d5f14caac30d
+		sourceLineageTag: last_audit_session
+		summarizeBy: none
+		sourceColumn: last_audit_session
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_load_time
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: cbcc9d66-6747-45bf-8969-255d18717aa0
+		sourceLineageTag: last_load_time
+		summarizeBy: none
+		sourceColumn: last_load_time
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column created_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 09d46ae1-724b-4389-b22c-c5dd74a7871e
+		sourceLineageTag: created_date
+		summarizeBy: none
+		sourceColumn: created_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column updated_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 6778799f-cf93-490a-908b-0e8ae7cbfeee
+		sourceLineageTag: updated_date
+		summarizeBy: none
+		sourceColumn: updated_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition cfg_table_watermark = entity
+		mode: directLake
+		source
+			entityName: cfg_table_watermark
+			schemaName: cfg
+			expressionSource: 'DirectLake - Rookie2Engineer_Warehouse'
+

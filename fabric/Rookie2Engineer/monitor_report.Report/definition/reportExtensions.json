@@ -1,0 +1,138 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/reportExtension/1.0.0/schema.json",
+  "name": "extension",
+  "entities": [
+    {
+      "name": "_measures",
+      "measures": [
+        {
+          "name": "Latest Batch Status",
+          "dataType": "Double",
+          "expression": "\nVAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7)\nVAR MaxDateInPeriod = \n    CALCULATE(\n        MAX('audit_batch_log'[session_start]), \n        FILTER('audit_session_log', 'audit_session_log'[session_start] >= CutoffDate)\n    )\nRETURN \n    CALCULATE(\n        UPPER(MAX('audit_batch_log'[batch_status])), \n        'audit_batch_log'[session_start] = MaxDateInPeriod\n    )"
+        },
+        {
+          "name": "Successful Runs",
+          "dataType": "Double",
+          "expression": "CALCULATE([Total Sessions], 'audit_session_log'[session_status] = \"success\")",
+          "references": {
+            "measures": [
+              {
+                "schema": "extension",
+                "entity": "_measures",
+                "name": "Total Sessions"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Success Rate",
+          "dataType": "Double",
+          "expression": "VAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) RETURN DIVIDE(CALCULATE(COUNTROWS('audit_session_log'), 'audit_session_log'[session_status] = \"success\", FILTER('audit_session_log', 'audit_session_log'[session_start] >= CutoffDate)), CALCULATE(COUNTROWS('audit_session_log'), FILTER('audit_session_log', 'audit_session_log'[session_start] >= CutoffDate)), 0)",
+          "formatString": "0.00\\ %;-0.00\\ %;0.00\\ %"
+        },
+        {
+          "name": "Failed Sessions",
+          "dataType": "Double",
+          "expression": "VAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) RETURN CALCULATE(COUNTROWS('audit_session_log'), 'audit_session_log'[session_status] = \"failed\", FILTER('audit_session_log', 'audit_session_log'[session_start] >= CutoffDate))"
+        },
+        {
+          "name": "Total Processed Rows",
+          "dataType": "Double",
+          "expression": "VAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) RETURN CALCULATE(SUM('audit_table_session_log'[processed_rows]), 'audit_table_session_log'[start_time] >= CutoffDate)",
+          "formatString": "0.00"
+        },
+        {
+          "name": "Failed Tables",
+          "dataType": "Double",
+          "expression": "VAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) RETURN CALCULATE(COUNTROWS('audit_table_session_log'), 'audit_table_session_log'[status] = \"failed\", 'audit_table_session_log'[start_time] >= CutoffDate)"
+        },
+        {
+          "name": "Succeeded Tables",
+          "dataType": "Double",
+          "expression": "VAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) RETURN CALCULATE(COUNTROWS('audit_table_session_log'), 'audit_table_session_log'[status] = \"success\", 'audit_table_session_log'[start_time] >= CutoffDate)"
+        },
+        {
+          "name": "Total Tables Processed",
+          "dataType": "Double",
+          "expression": "VAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) RETURN CALCULATE(COUNTROWS('audit_table_session_log'), 'audit_table_session_log'[start_time] >= CutoffDate)"
+        },
+        {
+          "name": "Avg Batch Duration",
+          "dataType": "Double",
+          "expression": "\nVAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) \nRETURN CALCULATE(\n    AVERAGEX('audit_batch_log', DATEDIFF([session_start], [session_end], MINUTE)), \n    FILTER(\n        'audit_batch_log', \n        'audit_batch_log'[session_start] >= CutoffDate &&\n        'audit_batch_log'[batch_status] = \"success\"\n    )\n)",
+          "formatString": "0"
+        },
+        {
+          "name": "Filter Session Log",
+          "dataType": "Double",
+          "expression": "\nVAR SelectedDays = SELECTEDVALUE(DateParameter[Days], 7) // Defaults to 7 days\nVAR CurrentRowDate = MAX('audit_session_log'[session_start])\nVAR CutoffDate = TODAY() - SelectedDays\nRETURN\nIF(\n    CurrentRowDate >= CutoffDate,\n    1,\n    0\n)"
+        },
+        {
+          "name": "Avg Table Duration",
+          "dataType": "Double",
+          "expression": "\nVAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) \nRETURN CALCULATE(\n    AVERAGEX('audit_table_session_log', DATEDIFF('audit_table_session_log'[start_time], 'audit_table_session_log'[end_time], MINUTE)), \n    FILTER(\n        'audit_table_session_log', \n        'audit_table_session_log'[start_time] >= CutoffDate && \n        'audit_table_session_log'[status] = \"success\"\n    )\n)"
+        },
+        {
+          "name": "Total Errors",
+          "dataType": "Double",
+          "expression": "VAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) RETURN CALCULATE(COUNTROWS('audit_error_log'), 'audit_error_log'[error_time] >= CutoffDate)"
+        },
+        {
+          "name": "Failed Table Sessions",
+          "dataType": "Double",
+          "expression": "VAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) RETURN CALCULATE(COUNTROWS('audit_table_session_log'), 'audit_table_session_log'[status] = \"failed\", 'audit_table_session_log'[start_time] >= CutoffDate)"
+        },
+        {
+          "name": "Invalid Record Count",
+          "dataType": "Double",
+          "expression": "VAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) RETURN CALCULATE(SUM('audit_invalid_record'[invalid_record_count]), 'audit_invalid_record'[rejected_timestamp] >= CutoffDate)"
+        },
+        {
+          "name": "Tables With Invalid Data",
+          "dataType": "Double",
+          "expression": "VAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) RETURN CALCULATE(DISTINCTCOUNT('audit_invalid_record'[table_name]), 'audit_invalid_record'[rejected_timestamp] >= CutoffDate)"
+        },
+        {
+          "name": "Session Duration",
+          "dataType": "Double",
+          "expression": "\nVAR StartTime = MIN('audit_session_log'[session_start])\nVAR EndTime = MAX('audit_session_log'[session_end])\nRETURN \nIF(\n    ISBLANK(EndTime),\n    DATEDIFF(StartTime, NOW(), MINUTE),\n    DATEDIFF(StartTime, EndTime, MINUTE)\n)"
+        },
+        {
+          "name": "Total Sessions",
+          "dataType": "Double",
+          "expression": "\nVAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) \nRETURN CALCULATE(\n    COUNTROWS('audit_session_log'), \n    FILTER('audit_session_log', 'audit_session_log'[session_start] >= CutoffDate)\n)"
+        },
+        {
+          "name": "Total Batches",
+          "dataType": "Double",
+          "expression": "VAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) RETURN CALCULATE(COUNTROWS('audit_batch_log'), FILTER('audit_batch_log', 'audit_batch_log'[session_start] >= CutoffDate))"
+        },
+        {
+          "name": "Success Batches",
+          "dataType": "Double",
+          "expression": "VAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) RETURN CALCULATE(COUNTROWS('audit_batch_log'), FILTER('audit_batch_log', 'audit_batch_log'[batch_status] = \"success\" && 'audit_batch_log'[session_start] >= CutoffDate))"
+        },
+        {
+          "name": "Success Sessions",
+          "dataType": "Double",
+          "expression": "VAR CutoffDate = TODAY() - SELECTEDVALUE(DateParameter[Days], 7) RETURN CALCULATE(COUNTROWS('audit_session_log'), FILTER('audit_session_log', 'audit_session_log'[session_status] = \"success\" && 'audit_session_log'[session_start] >= CutoffDate))"
+        },
+        {
+          "name": "Data Last Updated",
+          "dataType": "DateTime",
+          "expression": "MAX(\n    MAX(\n        MAX('audit_table_session_log'[start_time]),\n        MAX(\n            MAX('audit_batch_log'[session_start]),\n            MAX('audit_session_log'[session_start]))),\n    MAX(\n        MAX('audit_table_session_log'[end_time]),\n        MAX(\n            MAX('audit_batch_log'[session_end]),\n            MAX('audit_session_log'[session_end]))))"
+        }
+      ]
+    },
+    {
+      "name": "audit_session_log",
+      "measures": [
+        {
+          "name": "FormattedDateMeasure",
+          "dataType": "Double",
+          "expression": "FORMAT(SELECTEDVALUE('audit_session_log'[session_start]), \"dd-MM-yyyy\")"
+        }
+      ]
+    }
+  ]
+}

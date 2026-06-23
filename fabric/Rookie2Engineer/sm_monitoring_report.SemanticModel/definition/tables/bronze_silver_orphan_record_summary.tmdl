@@ -1,0 +1,67 @@
+table bronze_silver_orphan_record_summary
+	lineageTag: fcefcc3e-b17b-4734-a341-f28d7190116a
+	sourceLineageTag: [validate].[bronze_silver_orphan_record_summary]
+
+	column check_type
+		dataType: string
+		lineageTag: 0d4cc5dc-d3dc-4074-90bf-885758ad6b32
+		sourceLineageTag: check_type
+		summarizeBy: none
+		sourceColumn: check_type
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: 66e09ee7-7300-4e66-8558-f517278e9cf6
+		sourceLineageTag: status
+		summarizeBy: none
+		sourceColumn: status
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column check_name
+		dataType: string
+		lineageTag: 868bc67f-9d62-4680-b489-ab16e979970e
+		sourceLineageTag: check_name
+		summarizeBy: none
+		sourceColumn: check_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column orphan_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 86588b17-3850-40d4-8e52-8e76cc88d227
+		sourceLineageTag: orphan_count
+		summarizeBy: sum
+		sourceColumn: orphan_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_result
+		dataType: string
+		lineageTag: 12e60a5a-38c7-4bbf-b8f0-e6994bf8537c
+		sourceLineageTag: expected_result
+		summarizeBy: none
+		sourceColumn: expected_result
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition bronze_silver_orphan_record_summary = entity
+		mode: directLake
+		source
+			entityName: bronze_silver_orphan_record_summary
+			schemaName: validate
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

@@ -1,0 +1,116 @@
+table dimagent
+	lineageTag: 3051c9c9-dd22-4697-aaf9-33d3a457092f
+	sourceLineageTag: a020d4e1-58a7-434d-857d-66b2ab54a952
+
+	column agent_id
+		dataType: string
+		lineageTag: e9970b96-0647-4528-96fc-3b8bcf14a46b
+		sourceLineageTag: 2c352738-8d2b-4fec-bc5d-177bf6daed52
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: agent_id
+
+		annotation SummarizationSetBy = User
+
+	column agent_key
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		lineageTag: ab2a5f78-936e-4b61-8e85-70e55cddc19c
+		sourceLineageTag: 7da1045c-418a-43b9-91bf-bc2782f9ad50
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: agent_key
+
+		annotation SummarizationSetBy = User
+
+	column agent_name
+		dataType: string
+		lineageTag: 131ffc14-e317-4e84-ad5d-64574762dc81
+		sourceLineageTag: e2bdd4ec-86d0-48d1-b3a2-27537e640d3d
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: agent_name
+
+		annotation SummarizationSetBy = User
+
+	column region
+		dataType: string
+		lineageTag: 9e8bba48-303c-4d3c-b13b-67cee46b48bb
+		sourceLineageTag: 3b9cbaa2-e946-4bbf-b163-6f5ab0e5aa29
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = User
+
+	column branch
+		dataType: string
+		lineageTag: 5d448c29-3874-4da4-929c-8298ad8acee3
+		sourceLineageTag: fddeb8c5-e47a-4469-95f6-829afff84c08
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: branch
+
+		annotation SummarizationSetBy = User
+
+	column manager_name
+		dataType: string
+		lineageTag: 1a4a0138-a6c8-4aa2-a4f3-a7b9c688360a
+		sourceLineageTag: d9e0b33f-8541-4a93-a573-568c6d5d0650
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: manager_name
+
+		annotation SummarizationSetBy = User
+
+	column created_date
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: a6fd81d7-3fc0-4ab0-8b87-a3389732b33a
+		sourceLineageTag: a97ec7e3-45e4-4233-9def-1bac9a1f2e06
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: created_date
+
+		annotation SummarizationSetBy = User
+
+	column effective_start_date
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: 09111898-b9d2-4842-9797-42dc07840051
+		sourceLineageTag: 00ebca71-92b6-4988-b5bc-31f48e6a7d6f
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: effective_start_date
+
+		annotation SummarizationSetBy = User
+
+	column effective_end_date
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: a369714d-5bf4-4a65-985b-7aa5b5550927
+		sourceLineageTag: b18a5f9a-06f7-45ed-9baa-58c71a01a81d
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: effective_end_date
+
+		annotation SummarizationSetBy = User
+
+	column is_current
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c4b12365-b73c-4b56-8c88-8896659dbeb5
+		sourceLineageTag: afc97717-1205-440e-b533-2faace1954cc
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: is_current
+
+		annotation SummarizationSetBy = User
+
+	partition dimagent = entity
+		mode: directQuery
+		source
+			entityName: dimagent
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

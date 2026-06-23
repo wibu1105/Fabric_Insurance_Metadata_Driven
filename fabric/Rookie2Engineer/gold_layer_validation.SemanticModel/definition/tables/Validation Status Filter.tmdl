@@ -1,0 +1,26 @@
+table 'Validation Status Filter'
+	lineageTag: 75ff01c3-40a8-4162-909b-f2c839417135
+
+	column Status
+		lineageTag: b1854ac3-d902-4d26-ba73-c0c0c758655f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Status]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Validation Status Filter' = calculated
+		mode: import
+		source =
+				
+				DATATABLE(
+				    "Status", STRING,
+				    {
+				        {"ALL"},
+				        {"PASS"},
+				        {"FAIL"}
+				    }
+				)
+
+	annotation PBI_Id = d4468cd0303c4a9db334b28dd482ef91
+

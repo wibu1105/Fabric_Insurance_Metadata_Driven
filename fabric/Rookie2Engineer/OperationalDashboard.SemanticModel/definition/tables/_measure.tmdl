@@ -1,0 +1,439 @@
+table _measure
+	lineageTag: 4586d005-b5c6-4fd1-8a8a-af88819d9e24
+	sourceLineageTag: a5da2db7-a027-4629-9b2d-29e66bf5d0ee
+
+	measure 'Issue Policy' = EXTERNALMEASURE("Issue Policy", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: da1badbc-47bd-4c5d-9abe-5748df0f92a9
+		sourceLineageTag: 93fa3bed-9b47-404a-9651-9b2fcf610a06
+		dataCategory: Uncategorized
+
+	measure 'Policies MoM % Growth' = EXTERNALMEASURE("Policies MoM % Growth", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: eb506a16-3f80-4c6d-b1f1-041e5c3468d9
+		sourceLineageTag: 2c83151e-d44b-43a3-8687-b2d6b9917ed5
+		dataCategory: Uncategorized
+
+	measure 'Last Batch Run Time' = EXTERNALMEASURE("Last Batch Run Time", STRING, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: 82425b32-188a-40d6-a5e4-6c8bb8184b93
+		sourceLineageTag: fe8a505b-18a7-4f6d-a278-6f47f692dda4
+		dataCategory: Uncategorized
+
+	measure 'Payment Success Rate MoM % Growth' = EXTERNALMEASURE("Payment Success Rate MoM % Growth", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6fafd731-f5b9-4c29-aefe-3fdf402255db
+		sourceLineageTag: 13762444-902b-4397-a217-f31ebf19ac14
+		dataCategory: Uncategorized
+
+	measure _measure = EXTERNALMEASURE("_measure", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: 87b0e83d-dc05-4c03-a905-40f8a01ef0e7
+		sourceLineageTag: 8543ca67-4cee-4341-be4c-49998c16f696
+		dataCategory: Uncategorized
+
+	measure 'Payment Success Rate' = EXTERNALMEASURE("Payment Success Rate", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 0aaefed7-9472-45bf-beb7-111081884d85
+		sourceLineageTag: b91559a5-5300-41bd-b70c-880b18a1265d
+		dataCategory: Uncategorized
+
+	measure 'Active Policies' = EXTERNALMEASURE("Active Policies", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: 230c3adf-9415-44c9-88bb-e249b351ff17
+		sourceLineageTag: c183254d-fd8f-47b1-8f1b-334c7eb1f582
+		dataCategory: Uncategorized
+
+	measure 'Issue Policy MoM % Growth' = EXTERNALMEASURE("Issue Policy MoM % Growth", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 7d881b01-a465-43d2-8651-de1baa3c5019
+		sourceLineageTag: e90079b1-bd6f-4ddf-a28b-a42cf997dbbe
+		dataCategory: Uncategorized
+
+	measure 'Active Policies MoM % Growth' = EXTERNALMEASURE("Active Policies MoM % Growth", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 88636635-b18b-4da2-b844-4a3c2ad60c9b
+		sourceLineageTag: 6457420b-eaac-461b-b816-769163bd6ade
+		dataCategory: Uncategorized
+
+	measure 'Paid Premium' = EXTERNALMEASURE("Paid Premium", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: #,0.00\ "₫";-#,0.00\ "₫";#,0.00\ "₫"
+		lineageTag: 69e6bc7c-bc54-484a-9c7e-08720a359280
+		sourceLineageTag: 7039d49c-b7eb-4b2a-9bdd-e48bce133e26
+		dataCategory: Uncategorized
+
+	measure 'Paid Premium MoM % Growth' = EXTERNALMEASURE("Paid Premium MoM % Growth", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 7435bd56-317b-48b8-b224-c5633058b8ec
+		sourceLineageTag: 789c83ed-750e-4447-a0c0-aa6206adcef8
+		dataCategory: Uncategorized
+
+	measure 'Pending Payment' = EXTERNALMEASURE("Pending Payment", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: #,0.00\ "₫";-#,0.00\ "₫";#,0.00\ "₫"
+		lineageTag: da819643-e1c5-418f-8b7e-93cee354145c
+		sourceLineageTag: 34e1a103-bcc8-4df1-97d0-293eb33affe5
+		dataCategory: Uncategorized
+
+	measure 'Pending Payment MoM % Growth' = EXTERNALMEASURE("Pending Payment MoM % Growth", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: b84772bb-25b9-41eb-8cdc-fcc6d75594d7
+		sourceLineageTag: 6c26cf5a-ee57-4174-96f8-d839733fba94
+		dataCategory: Uncategorized
+
+	measure 'Failed Payment' = EXTERNALMEASURE("Failed Payment", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: #,0.00\ "₫";-#,0.00\ "₫";#,0.00\ "₫"
+		lineageTag: 96a4ee45-8527-4053-aa7d-eb86f9cd537f
+		sourceLineageTag: 9950fffb-5be1-4cd3-bbce-7252dec15da5
+		dataCategory: Uncategorized
+
+	measure 'Failed Payment MoM % Growth' = EXTERNALMEASURE("Failed Payment MoM % Growth", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: c365bf86-321a-4f7c-8e1b-c6042ef7affc
+		sourceLineageTag: a0aa61a4-4e25-4213-a046-7fdf97184557
+		dataCategory: Uncategorized
+
+	measure 'Cancellation Rate' = EXTERNALMEASURE("Cancellation Rate", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 7f4709dd-f913-4e84-93d7-abe0bc0bde06
+		sourceLineageTag: eb3e27c9-8577-4515-99e3-34d21647188d
+		dataCategory: Uncategorized
+
+	measure 'Cancellation Rate MoM % Growth' = EXTERNALMEASURE("Cancellation Rate MoM % Growth", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 68758335-d5e1-47b2-83ab-60b25e40a2b2
+		sourceLineageTag: 3c3632e4-c745-49cf-9256-310ae92e5036
+		dataCategory: Uncategorized
+
+	measure 'Cancellation Count' = EXTERNALMEASURE("Cancellation Count", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: 30ea0bcd-b496-478a-b855-dbe9d4fb6660
+		sourceLineageTag: 33b5ba76-15c4-4370-a3e3-9c7b936992a5
+		dataCategory: Uncategorized
+
+	measure 'Expired Policy Count' = EXTERNALMEASURE("Expired Policy Count", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: fc567847-b310-44b0-ae81-0afdc0057f00
+		sourceLineageTag: bc1a17f8-4c75-4f1f-8352-02fba2686191
+		dataCategory: Uncategorized
+
+	measure 'Total Quotations' = EXTERNALMEASURE("Total Quotations", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: 7dd0bc22-32ec-42d5-ae79-fb2ea9d1dd93
+		sourceLineageTag: 9e365b31-e6fb-4f5e-9500-827de3e84254
+		dataCategory: Uncategorized
+
+	measure 'Accepted Quotations' = EXTERNALMEASURE("Accepted Quotations", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: 00bde9a0-2379-4efb-8d90-db9d4c88ad9f
+		sourceLineageTag: 4bfa7788-d248-4312-b61b-3f84a09cb222
+		dataCategory: Uncategorized
+
+	measure 'Converted Quotations' = EXTERNALMEASURE("Converted Quotations", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: 229f7e98-7e28-4c1e-a52e-8c0d65af9fd8
+		sourceLineageTag: d4547482-2060-4d63-9a50-b1364c5c927b
+		dataCategory: Uncategorized
+
+	measure RefundAmount = EXTERNALMEASURE("RefundAmount", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: #,0.00\ "₫";-#,0.00\ "₫";#,0.00\ "₫"
+		lineageTag: b4b6548f-1c8b-4b52-88ff-3b2333bd0fbe
+		sourceLineageTag: c0400b0b-38c4-41e4-8b74-24023afc517c
+		dataCategory: Uncategorized
+
+	measure 'Expired Quotations' = EXTERNALMEASURE("Expired Quotations", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: 0a666b4f-a7db-4680-bf7c-266b033329be
+		sourceLineageTag: 37224226-43af-4aa3-84a0-a75bb18913b4
+		dataCategory: Uncategorized
+
+	measure 'Rejected Quotations' = EXTERNALMEASURE("Rejected Quotations", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: b7fb62a9-7318-4a41-89bb-09d3bfee0ea6
+		sourceLineageTag: a262b067-1acd-4c81-8817-90ca00145dbc
+		dataCategory: Uncategorized
+
+	measure 'Policies Issued' = EXTERNALMEASURE("Policies Issued", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: 5701085c-9b2c-4b68-8e29-610a160f7a2c
+		sourceLineageTag: e4aba949-f1a6-4b66-a4fd-fdd948c49294
+		dataCategory: Uncategorized
+
+	measure 'Total Premium (VND)' = EXTERNALMEASURE("Total Premium (VND)", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: 82cba552-44e0-4a20-8f67-4ac73b824ec1
+		sourceLineageTag: 2bcbf536-9387-4632-9447-a68d14b90130
+		dataCategory: Uncategorized
+
+	measure 'Avg Premium' = EXTERNALMEASURE("Avg Premium", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: 3ba4727f-226a-4d8d-8e95-7b289b581710
+		sourceLineageTag: aa1d5071-ed35-4cd2-b8a2-880c0575b0cb
+		dataCategory: Uncategorized
+
+	measure 'Conversion Rate' = EXTERNALMEASURE("Conversion Rate", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: cdf7c12e-fc26-4646-ab34-55476df51903
+		sourceLineageTag: 63c055bb-e449-4c48-afeb-b6217f40f255
+		dataCategory: Uncategorized
+
+	measure 'Active Customers' = EXTERNALMEASURE("Active Customers", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: 7b783fe7-5613-4620-9fb7-e363aecaeef9
+		sourceLineageTag: 2c8c2993-30ca-4211-a087-f40d94a9e04f
+		dataCategory: Uncategorized
+
+	measure 'Pending Count 0-7 days' = EXTERNALMEASURE("Pending Count 0-7 days", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: 2d5ae412-0255-46cd-ad1c-5b6fc976c0d1
+		sourceLineageTag: 8e489573-2bf3-4284-b42f-f981adc61083
+		dataCategory: Uncategorized
+
+	measure 'Pending Count 31-60 days' = EXTERNALMEASURE("Pending Count 31-60 days", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: e005666d-251a-4353-b55d-8af358d1546d
+		sourceLineageTag: 43cf4221-86ed-4266-80c2-5b2da9cfa644
+		dataCategory: Uncategorized
+
+	measure 'Pending Count 8-30 days' = EXTERNALMEASURE("Pending Count 8-30 days", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: a0a3cf7c-1082-4e3e-b32d-8645d506abcd
+		sourceLineageTag: c8ee1638-354c-41c9-ae12-c2bbd71c74c2
+		dataCategory: Uncategorized
+
+	measure 'Pending Count 61-90 days' = EXTERNALMEASURE("Pending Count 61-90 days", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: c0967259-f86c-44c4-87ec-e9e1bcf118c1
+		sourceLineageTag: 8fcc36a6-e090-4764-80fb-ce1b562a2e86
+		dataCategory: Uncategorized
+
+	measure 'Pending Count >90 days' = EXTERNALMEASURE("Pending Count >90 days", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: b1699e08-e41e-42bc-889a-c31a51ed8da0
+		sourceLineageTag: 43be08b8-9f13-40ae-84a7-817117baf8e8
+		dataCategory: Uncategorized
+
+	measure 'Pending Payment Count' = EXTERNALMEASURE("Pending Payment Count", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: 0992dc03-9d73-47e6-940c-b8183906c5c1
+		sourceLineageTag: b71bc7fa-cd11-479a-9899-3e282519295c
+		dataCategory: Uncategorized
+
+	measure 'Pending Count by Band' =
+			
+			SWITCH(
+			    SELECTEDVALUE('Aging Bands'[Band]),
+			    "0-7 days", [Pending Count 0-7 days],
+			    "8-30 days", [Pending Count 8-30 days],
+			    "31-60 days", [Pending Count 31-60 days],
+			    "61-90 days", [Pending Count 61-90 days],
+			    ">90 days", [Pending Count >90 days]
+			)
+		formatString: 0
+		lineageTag: f1469bcd-f768-4516-8bcd-02cdbc747398
+
+		changedProperty = Name
+
+	measure 'Successful Payment Count' = EXTERNALMEASURE("Successful Payment Count", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: c55e314b-eb9e-4159-880b-5a9a548422b2
+		sourceLineageTag: b81e9cb9-3aa0-43fd-bdb2-d407dc351999
+		dataCategory: Uncategorized
+
+	measure 'Visual Hack - Count Bar' = [Successful Payment Count] * 1000000
+		formatString: 0
+		lineageTag: 5412d609-313b-49f2-b2bc-ef91e388077b
+
+		changedProperty = Name
+
+	measure 'Total Quotations PM' = EXTERNALMEASURE("Total Quotations PM", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: e69cf36e-7604-4a60-b792-1b000fbb23e9
+		sourceLineageTag: f5ce2b70-787d-42c6-83db-46d6233d318e
+		dataCategory: Uncategorized
+
+	measure 'Total Quotations %MoM' = EXTERNALMEASURE("Total Quotations %MoM", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e3a3a7d4-dc3d-420b-b59b-66e24741502e
+		sourceLineageTag: e79e63d3-5472-4ebd-8f8c-95bf0b9e5c2f
+		dataCategory: Uncategorized
+
+	measure Measure = EXTERNALMEASURE("Measure", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: 18be25b6-9f0a-4274-8d63-06f00f5726b8
+		sourceLineageTag: bdd78c51-dbc6-4afb-88b7-d879442b231f
+		dataCategory: Uncategorized
+
+	measure 'Accepted Quotations PM' = EXTERNALMEASURE("Accepted Quotations PM", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: 8254d9ab-de1f-46f0-b557-af0995d2aaa8
+		sourceLineageTag: 8bff11da-57dc-4210-9fda-b4afadf66bad
+		dataCategory: Uncategorized
+
+	measure 'Accepted Quotations %MoM' = EXTERNALMEASURE("Accepted Quotations %MoM", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 476171f6-bb8b-4cae-a530-d7704b70e3e0
+		sourceLineageTag: fc0a2e9a-070d-4231-afca-039959ea5f09
+		dataCategory: Uncategorized
+
+	measure 'Policies Issued PM' = EXTERNALMEASURE("Policies Issued PM", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: 41b5b4f8-14be-42cb-8b9b-8805cd7870f3
+		sourceLineageTag: b795187d-806a-4baa-b1a0-425d8e288c64
+		dataCategory: Uncategorized
+
+	measure 'Policies Issued MoM %' = EXTERNALMEASURE("Policies Issued MoM %", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 498d53cb-ce32-4d2e-b2d3-3f6ec5c4e7ce
+		sourceLineageTag: e6424d5e-680c-4130-91a9-57b57a1a469b
+		dataCategory: Uncategorized
+
+	measure 'Conversion Rate %MoM' = EXTERNALMEASURE("Conversion Rate %MoM", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 83a6c609-33c0-4302-b332-886837f68596
+		sourceLineageTag: 7bd9bd72-d1f1-41a2-b603-b507c3d168e5
+		dataCategory: Uncategorized
+
+	measure 'Measure 2' = EXTERNALMEASURE("Measure 2", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: b821b6bb-b156-4716-8536-1c58e72d64a3
+		sourceLineageTag: cb4b6a6b-ea41-4192-9308-db80af30de88
+		dataCategory: Uncategorized
+
+	measure 'Total Premium MoM %' = EXTERNALMEASURE("Total Premium MoM %", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: c98a6789-9720-4414-a83a-4513f26bd12f
+		sourceLineageTag: e52ed380-a303-4859-8ec9-856006b660d2
+		dataCategory: Uncategorized
+
+	measure 'Active Customers MoM %' = EXTERNALMEASURE("Active Customers MoM %", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 7f5c0f74-433b-4547-8554-f04861c6126d
+		sourceLineageTag: 4eecd387-b8b5-4602-a33a-79e53e7f6433
+		dataCategory: Uncategorized
+
+	measure 'Refunded Payment MoM % Growth' = EXTERNALMEASURE("Refunded Payment MoM % Growth", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 668a8bfa-ca59-4d88-9b4e-e4658b3ddb03
+		sourceLineageTag: 46065389-815f-4201-8c7b-0c4ec9b32596
+		dataCategory: Uncategorized
+
+	measure 'Quoted Quotations' = EXTERNALMEASURE("Quoted Quotations", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: 096c4d32-818a-45f5-a129-81467b864743
+		sourceLineageTag: cd134f51-57ac-4a22-a3b2-40fedcf83dfe
+		dataCategory: Uncategorized
+
+	measure 'Measure 3' = EXTERNALMEASURE("Measure 3", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: 2e040d0f-637d-41ca-be42-8a753505e784
+		sourceLineageTag: 092cbc07-cff9-4e5d-a82d-74e7fec5c880
+		dataCategory: Uncategorized
+
+	measure 'Expired Policies' = EXTERNALMEASURE("Expired Policies", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: f8ea0d28-6965-4d4e-ae9a-f16a810cbbf8
+		sourceLineageTag: 923a387b-cefc-4dac-b1ec-5a4153f59b03
+		dataCategory: Uncategorized
+
+	measure 'Measure 4' = EXTERNALMEASURE("Measure 4", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		lineageTag: 6b7b312e-06ec-445b-9b0a-cc7bd149f6c7
+		sourceLineageTag: ef8462ba-434b-406a-a6c9-c850063f04b3
+		dataCategory: Uncategorized
+
+	measure 'Actual Collected Premium' = EXTERNALMEASURE("Actual Collected Premium", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: #,0.00\ "₫";-#,0.00\ "₫";#,0.00\ "₫"
+		lineageTag: 21875b17-8052-4e00-b74b-ed632e51dc5f
+		sourceLineageTag: bda3f6da-2a9c-47cd-b7e4-919d5412fbe5
+		dataCategory: Uncategorized
+
+	measure 'Actual Collected Premium MoM % Growth' = EXTERNALMEASURE("Actual Collected Premium MoM % Growth", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 262baf20-9c42-47d5-a924-82f48c4b72dc
+		sourceLineageTag: 8d1dee58-5523-4782-a4d1-54a3d11ab26b
+		dataCategory: Uncategorized
+
+	measure 'Total Premium %MoM' = EXTERNALMEASURE("Total Premium %MoM", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: a4a3902c-4b19-4c67-a9df-1c3c2f1e99a0
+		sourceLineageTag: c48ca777-a85a-42a1-b325-6aea82f6e943
+		dataCategory: Uncategorized
+
+	measure 'Avg Premium %MoM' = EXTERNALMEASURE("Avg Premium %MoM", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0%;-0%;0%
+		lineageTag: 49724f26-4e9a-4c3e-8773-e8052b038540
+		sourceLineageTag: c2f1ff54-2335-4b67-aded-6450fdc0c10c
+		dataCategory: Uncategorized
+
+	measure 'Active Customers %MoM' = EXTERNALMEASURE("Active Customers %MoM", DOUBLE, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 8353c11b-1e7e-4356-8c11-0782351b2927
+		sourceLineageTag: 55b3d1e1-1346-4f63-a80e-250270c63371
+		dataCategory: Uncategorized
+
+	measure 'Measure 5' = EXTERNALMEASURE("Measure 5", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: baef4cc8-de73-42c3-a745-9e74e9089af5
+		sourceLineageTag: f60e93a4-d422-40ad-b1f7-ea41da2a0395
+		dataCategory: Uncategorized
+
+	measure 'Cancelled Policies' = EXTERNALMEASURE("Cancelled Policies", INTEGER, "DirectQuery to AS - dashboard_semantic_model")
+		formatString: 0
+		lineageTag: 1d04e537-cf25-4ffb-b607-d5d56ebaf332
+		sourceLineageTag: 69e8c1f3-9fa2-45ee-b405-3eef5798af4d
+		dataCategory: Uncategorized
+
+	measure 'Measure 6' =
+			
+			VAR SelectedDate =
+			    MAX ( 'dimdate'[full_date] )
+			
+			VAR HasRestrictedDateSelection =
+			    ISCROSSFILTERED('dimdate')
+			
+			RETURN
+			IF (
+			    HasRestrictedDateSelection,
+			
+			    -- Case 1: Month-Year or date range selected.
+			    -- Count policies active as of the selected period end date.
+			    CALCULATE (
+			        COUNTROWS ( 'DimPolicyInfo' ),
+			        'DimPolicyInfo'[is_deleted] = FALSE (),
+			        'FactPolicy'[policy_status] = "ACTIVE",
+			        'DimPolicyInfo'[policy_start_date] <= SelectedDate,
+			        'DimPolicyInfo'[policy_end_date] >= SelectedDate
+			            || ISBLANK ( 'DimPolicyInfo'[policy_end_date] )
+			    ),
+			
+			    -- Case 2: Time slicer is All.
+			    -- Count policies whose current business status is ACTIVE.
+			    CALCULATE (
+			        DISTINCTCOUNT ( 'FactPolicy'[policy_info_key] ),
+			        REMOVEFILTERS ( 'dimdate' ),
+			        'DimPolicyInfo'[is_deleted] = FALSE (),
+			        'FactPolicy'[policy_status] = "ACTIVE"
+			    )
+			)
+		formatString: 0
+		lineageTag: 497b5b9b-9881-4116-88d8-e972b60fa989
+
+	measure 'Measure 7' =
+			
+			VAR SelectedDate =
+			    MAX('dimdate'[full_date])
+			
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT('FactPolicy'[policy_info_key]),
+			    'DimPolicyInfo'[is_deleted] = FALSE(),
+			    'DimPolicyInfo'[policy_start_date] <= SelectedDate,
+			    ISBLANK('DimPolicyInfo'[policy_end_date])
+			        || 'DimPolicyInfo'[policy_end_date] >= SelectedDate,
+			    'FactPolicy'[policy_status] = "ACTIVE"
+			)
+		formatString: 0
+		lineageTag: d7015b4d-9993-4f10-aac1-783ab8ab89b5
+
+	column Column
+		dataType: int64
+		formatString: 0
+		lineageTag: 821943da-e930-41aa-bc9f-4b2fca473dc9
+		sourceLineageTag: 124539de-f015-4070-8f69-6d7a56d3fa5e
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: Column
+
+		annotation SummarizationSetBy = User
+
+	partition _measure = entity
+		mode: directQuery
+		source
+			entityName: _measure
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

@@ -1,0 +1,98 @@
+table dimvehicle
+	lineageTag: 909b5898-2a68-4fe5-9d45-dadd91e96c6e
+	sourceLineageTag: [gold].[dimvehicle]
+
+	column vehicle_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 7df4b79d-add3-4f1c-bb73-7c2d6726935d
+		sourceLineageTag: vehicle_key
+		summarizeBy: sum
+		sourceColumn: vehicle_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 1532ac2f-0dbe-488f-8dd1-9c6e2fb9a340
+		sourceLineageTag: customer_key
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_id
+		dataType: string
+		lineageTag: f49754b4-c340-4c41-bdb7-218fe54855a2
+		sourceLineageTag: vehicle_id
+		summarizeBy: none
+		sourceColumn: vehicle_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column plate_number
+		dataType: string
+		lineageTag: 00f77d30-a1c0-4a20-9f6a-8bd77a2ad609
+		sourceLineageTag: plate_number
+		summarizeBy: none
+		sourceColumn: plate_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_brand
+		dataType: string
+		lineageTag: 49b8f4db-1305-4129-a37c-70bc873ce793
+		sourceLineageTag: vehicle_brand
+		summarizeBy: none
+		sourceColumn: vehicle_brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_model
+		dataType: string
+		lineageTag: 397385c6-dfa3-4b3e-89cd-a901d307dcc5
+		sourceLineageTag: vehicle_model
+		summarizeBy: none
+		sourceColumn: vehicle_model
+
+		annotation SummarizationSetBy = Automatic
+
+	column manufacture_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 48f1f978-4dc2-4cb4-812a-4bcb86de8daf
+		sourceLineageTag: manufacture_year
+		summarizeBy: sum
+		sourceColumn: manufacture_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_value
+		dataType: double
+		lineageTag: bcc1e5e3-6a4a-4542-91d5-ec274c411036
+		sourceLineageTag: vehicle_value
+		summarizeBy: sum
+		sourceColumn: vehicle_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column is_deleted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 89d79a8a-bae7-4696-b308-17ae0625f200
+		sourceLineageTag: is_deleted
+		summarizeBy: none
+		sourceColumn: is_deleted
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimvehicle = entity
+		mode: directLake
+		source
+			entityName: dimvehicle
+			schemaName: gold
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+

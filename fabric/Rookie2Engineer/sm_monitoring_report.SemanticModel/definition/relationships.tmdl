@@ -1,0 +1,44 @@
+relationship 69138d79-325d-a51b-973e-f5822bd47127
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: cfg_table_watermark.table_id
+	toColumn: cfg_landing_bronze_table.table_id
+
+relationship 0750e451-027a-3a52-2b57-8dcd6c7a166b
+	crossFilteringBehavior: bothDirections
+	fromColumn: audit_table_session_log.table_id
+	toColumn: cfg_silver_gold_table.table_id
+
+relationship 8a35d992-149f-0860-88fc-ca06480dd38c
+	crossFilteringBehavior: bothDirections
+	fromColumn: audit_table_session_log.table_id
+	toColumn: cfg_landing_bronze_table.table_id
+
+relationship e26b6424-1be2-4b42-21e8-e27eee3f6446
+	fromColumn: audit_table_session_log.layer_name
+	toColumn: DimLayer.layer_name
+
+relationship 64f4aba1-892f-b820-26ec-4fa2ce2c4ef7
+	crossFilteringBehavior: bothDirections
+	fromColumn: audit_table_session_log.audit_session_id
+	toColumn: audit_session_log.audit_session_id
+
+relationship 0e712b31-d4b4-6cf0-d21c-f5ddae4ceef1
+	fromColumn: audit_session_log.session_status
+	toColumn: DimStatus.Status
+
+relationship 0db607d4-8819-dc0a-cfe2-6a20a4cb0d37
+	crossFilteringBehavior: bothDirections
+	fromColumn: audit_session_log.audit_batch_id
+	toColumn: audit_batch_log.audit_batch_id
+
+relationship 242b4e7f-9b30-85db-30ab-5790864d66cc
+	crossFilteringBehavior: bothDirections
+	fromColumn: audit_error_log.audit_table_session_id
+	toColumn: audit_table_session_log.audit_table_session_id
+
+relationship 85b799e5-dd66-0641-c141-1729be180b03
+	crossFilteringBehavior: bothDirections
+	fromColumn: audit_table_session_log.audit_table_session_id
+	toColumn: audit_invalid_record.audit_table_session_id
+

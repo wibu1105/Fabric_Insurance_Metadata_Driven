@@ -1,0 +1,380 @@
+table _measure
+	lineageTag: 68986969-63bb-4556-a2ab-062713ed6b78
+
+	measure 'Issue Policy' = ```
+			
+			VAR IssuedCount = 
+			    CALCULATE(
+			        DISTINCTCOUNT('FactPolicy'[policy_info_key])
+			    )
+			
+			RETURN
+			    COALESCE(IssuedCount, 0)
+			```
+		formatString: 0
+		lineageTag: 4f2ee813-13f4-4c78-a9a1-b682396d3898
+
+	measure 'Active Policies' =
+			
+			VAR SelectedDate =
+			    MAX ( 'dimdate'[full_date] )
+			
+			VAR HasRestrictedDateSelection =
+			    ISCROSSFILTERED ( 'dimdate' )
+			
+			RETURN
+			IF (
+			    HasRestrictedDateSelection,
+			
+			    -- Case 1: Month-Year or date range selected.
+			    -- Count policies active as of the selected period end date.
+			    CALCULATE (
+			        COUNTROWS ( 'DimPolicyInfo' ),
+			        REMOVEFILTERS ( 'dimdate' ),
+			        'DimPolicyInfo'[is_deleted] = FALSE (),
+			        'DimPolicyInfo'[policy_start_date] <= SelectedDate,
+			        'DimPolicyInfo'[policy_end_date] >= SelectedDate
+			            || ISBLANK ( 'DimPolicyInfo'[policy_end_date] )
+			    ),
+			
+			    -- Case 2: Time slicer is All.
+			    -- Count policies whose current business status is ACTIVE.
+			    CALCULATE (
+			        DISTINCTCOUNT ( 'FactPolicy'[policy_info_key] ),
+			        REMOVEFILTERS ( 'dimdate' ),
+			        'DimPolicyInfo'[is_deleted] = FALSE (),
+			        'FactPolicy'[policy_status] = "ACTIVE"
+			    )
+			)
+		formatString: 0
+		lineageTag: 3956c61e-7463-4cdb-83f7-a3dae66fb295
+
+	measure 'Active Customers' =
+			
+			CALCULATE (
+			    DISTINCTCOUNT ( factpolicy[customer_key] ),
+			    factpolicy[policy_status] = "ACTIVE"
+			)
+		formatString: 0
+		lineageTag: e41b1f2f-8dd7-49da-94ce-4544fe82b01f
+
+	measure 'Actual Collected Premium' = ```
+			
+			VAR GrossPaid = 
+			    CALCULATE(
+			        SUM('FactPayment'[payment_amount]),
+			        'FactPayment'[payment_status] = "PAID"
+			    )
+			
+			VAR RefundedAmount = 
+			    CALCULATE(
+			        SUM('FactPayment'[payment_amount]),
+			        'FactPayment'[payment_status] = "REFUNDED"
+			    )
+			
+			RETURN 
+			    COALESCE(GrossPaid, 0) - COALESCE(RefundedAmount, 0)
+			```
+		lineageTag: 432d7bde-6400-4ffc-b971-604448188fc3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Paid Premium' =
+			
+			CALCULATE(
+			    SUM('FactPayment'[payment_amount]),
+			    'FactPayment'[payment_status] = "PAID"
+			)
+		lineageTag: 305392ee-77b8-4579-95ce-e7e4dabf2498
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Pending Payment' =
+			
+			CALCULATE(
+			    SUM('FactPayment'[payment_amount]),
+			    'FactPayment'[payment_status] = "PENDING"
+			)
+		lineageTag: 15270933-d7c4-4103-89d7-6993e89af21f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure RefundAmount = ```
+			
+			    CALCULATE(
+			        SUM('FactPayment'[payment_amount]),
+			        'FactPayment'[payment_status] = "REFUNDED"
+			    )
+			```
+		lineageTag: 9c2de79c-80af-44d2-b812-3bcab39a76f6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Failed Payment' =
+			
+			CALCULATE(
+			    SUM('FactPayment'[payment_amount]),
+			    'FactPayment'[payment_status] = "FAILED"
+			)
+		lineageTag: 800f2835-e4a1-4723-ba67-32f1863aa98d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Last Batch Run Time' = ```
+			
+			VAR LatestSuccessBatch = 
+			    CALCULATE(
+			        MAX('audit_batch_log'[session_end]),
+			        'audit_batch_log'[batch_status] = "success"
+			    )
+			    
+			VAR LastSuccessTime = 
+			    IF(
+			        ISBLANK(LatestSuccessBatch),
+			        "No Successful Runs",
+			        FORMAT(LatestSuccessBatch, "dd-MMM-yyyy HH:mm:ss")
+			    )
+			
+			RETURN "Last Updated: " & LastSuccessTime
+			```
+		lineageTag: c95138e0-2fde-42a6-b292-9c4cc677d094
+
+	measure 'Cancellation Rate' =
+			
+			VAR CancelledCount =
+			    CALCULATE (
+			        DISTINCTCOUNT ( 'FactCancellation'[policy_info_key] ),
+			        'DimPolicyInfo'[is_deleted] = FALSE ()
+			    )
+			
+			VAR IssuedCount =
+			    CALCULATE (
+			        DISTINCTCOUNT ( 'FactPolicy'[policy_info_key] ),
+			        'DimPolicyInfo'[is_deleted] = FALSE ()
+			    )
+			
+			RETURN
+			    DIVIDE ( CancelledCount, IssuedCount, 0 )
+		lineageTag: 4dce2515-785c-46da-ae4a-562e87183d6d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Quotations' =
+			
+			DISTINCTCOUNT ( factquotationitem[quotation_info_key] )
+		formatString: 0
+		lineageTag: e63d654a-9e95-4bcd-891e-3f1f1e44d0a9
+
+	measure 'Accepted Quotations' =
+			
+			CALCULATE ( [Total Quotations], factquotationitem[quotation_status] = "ACCEPTED" )
+		formatString: 0
+		lineageTag: 6ab09202-83e7-4d69-af20-61096dc88216
+
+	measure 'Policies Issued' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT( 'dimpolicyinfo'[policy_id] ),
+			    factpolicy
+			)
+		formatString: 0
+		lineageTag: 15f38283-76ff-4ecf-b365-b0076bdbf934
+
+	measure 'Converted Quotations' =
+			
+			CALCULATE(
+			    [Total Quotations],
+			    factquotationitem[quotation_status] = "CONVERTED"
+			)
+		formatString: 0
+		lineageTag: 0df266b8-d49e-49f1-bf4a-c2faf934af2b
+
+	measure 'Conversion Rate' =
+			
+			DIVIDE ( [Converted Quotations], [Total Quotations] )
+		lineageTag: 697c8433-f116-40ed-b5f5-dc1a9f425aae
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Premium (VND)' =
+			
+			SUM ( factpolicy[policy_premium_amount] )
+		lineageTag: e3fc25d3-8a9e-4aba-90af-c18514b437dc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Premium' =
+			
+			AVERAGE ( factpolicy[policy_premium_amount] )
+		lineageTag: 2ab7b427-ff49-4a7c-bcc6-36bc7dc39715
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Dashboard KPI Actual' =
+			
+			SWITCH(
+			    SELECTEDVALUE(dashboard_validation[kpi_name]),
+			    "Total Quotations", [Total Quotations],
+			    "Accepted Quotations", [Accepted Quotations],
+			    "Policies Issued", [Policies Issued],
+			    "Conversion Rate", [Conversion Rate]*100,
+			    "Total Premium", [Total Premium (VND)],
+			    "Average Premium", [Avg Premium],
+			    "Active Customers", [Active Customers],
+			    "Issued Policies", [Issue Policy],
+			    "Active Policies", [Active Policies],
+			    "Net Premium", [Actual Collected Premium],
+			    "Paid Premium", [Paid Premium],
+			    "Pending Payment", [Pending Payment],
+			    "Refund Amount", [RefundAmount],
+			    "Failed Payment", [Failed Payment],
+			    "Cancellation Rate", [Cancellation Rate]*100,
+			    BLANK()
+			)
+		lineageTag: 0660b66b-1902-4c83-81c2-428f15b179d0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Dashboard KPI Expected' =
+			
+			MAX(dashboard_validation[sql_query_value])
+		lineageTag: 23f2dc5a-8166-4b68-ad15-3136c9754553
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Dashboard KPI Variance' =
+			
+			[Dashboard KPI Actual]
+			-
+			[Dashboard KPI Expected]
+		lineageTag: cbdf1b9e-5954-46c5-8821-75060c4b5379
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Dashboard KPI Status' =
+			
+			IF(
+			    ABS([Dashboard KPI Variance]) < 0.01,
+			    "PASS",
+			    "FAIL"
+			)
+		lineageTag: bf524bd0-c0bd-4e50-87f7-6cabd84590e6
+
+	measure 'Total KPI Checks' =
+			
+			COUNTROWS('dashboard_validation')
+		formatString: 0
+		lineageTag: 67414dd2-ae3b-4b23-9f7b-54c16a74d3c7
+
+	measure 'Passed KPI Checks' =
+			
+			SUMX(
+			    'dashboard_validation',
+			    IF(
+			        [Dashboard KPI Status] = "PASS",
+			        1,
+			        0
+			    )
+			)
+		formatString: 0
+		lineageTag: 03dc58ff-c08c-4d91-85d8-f78eeb30f44c
+
+	measure 'Failed KPI Checks' =
+			
+			SUMX(
+			    'dashboard_validation',
+			    IF(
+			        [Dashboard KPI Status] = "FAIL",
+			        1,
+			        0
+			    )
+			)
+		formatString: 0
+		lineageTag: ec0d9ad0-554b-4680-9780-1c58332741cb
+
+	measure 'Success KPI Rate' =
+			
+			DIVIDE(
+			    [Passed KPI Checks],
+			    [Total KPI Checks]
+			)
+		lineageTag: 4e49aa19-e54f-4248-a226-ae8a23149d4a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Show KPI' =
+			
+			VAR SelectedStatus =
+			    SELECTEDVALUE(
+			        'Validation Status Filter'[Status],
+			        "ALL"
+			    )
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			
+			    SelectedStatus = "ALL", 1,
+			
+			    SelectedStatus = "PASS"
+			        && [Dashboard KPI Status] = "PASS", 1,
+			
+			    SelectedStatus = "FAIL"
+			        && [Dashboard KPI Status] = "FAIL", 1,
+			
+			    0
+			)
+		formatString: 0
+		lineageTag: e9ca479f-7a74-4213-b273-9c53517880be
+
+	measure 'DQ Score' = ```
+			
+			    CALCULATE(
+			        [Total DQ],
+			        ValidationResults[status] = "PASS"
+			    )
+			```
+		lineageTag: 8b77933d-da59-404b-8f17-48e6366c8e1c
+
+	measure 'Total DQ' = COUNTROWS(ValidationResults)
+		formatString: 0
+		lineageTag: 82500f35-94c4-49f4-b70f-a7e83e499544
+
+	measure 'Failed DQ' = [Total DQ] - [DQ Score]
+		formatString: 0
+		lineageTag: bbc3c849-58f6-4459-8454-53a27cb39037
+
+	measure 'Success DQ Rate' =
+			
+			DIVIDE(
+			    [DQ Score],
+			    [Total DQ]
+			)
+		lineageTag: ffda8ed7-4bbe-4003-94e5-a869ac9753c3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Gold DQ Status' =
+			
+			IF(
+			    ABS([Total DQ] - [DQ Score]) < 0.01,
+			    "PASS",
+			    "FAIL"
+			)
+		lineageTag: 50a0631e-56c9-4cfc-9ac4-25796342c3e1
+
+	column Column
+		formatString: 0
+		lineageTag: d45accf4-ec04-44ec-9724-97c5751d282e
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _measure = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = ebfc0c63e19a462b82c3165a0d49a7fe
+

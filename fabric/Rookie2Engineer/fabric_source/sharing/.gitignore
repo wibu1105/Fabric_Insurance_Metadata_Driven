@@ -1,0 +1,21 @@
+# Ignore all files with the specified extension.
+# Scope is all repo folders.
+*.Lakehouse/
+*.Lakehouse
+
+# The following are not in effect just yet
+
+# Add an exception to prevent ignoring a file with the specified name.
+# Scope is all repo folders.
+# !package.json
+
+# Ignore a file with the specified name.
+# Scoped to the 'logs' subfolder.
+#/logs/test.logfile
+
+# Ignore all files with the specified name.
+# Scoped to the 'logs' subfolder and all folders beneath it.
+#/logs/**/test.logfile
+
+# Ignore all files in the 'logs' subfolder.
+#/logs/

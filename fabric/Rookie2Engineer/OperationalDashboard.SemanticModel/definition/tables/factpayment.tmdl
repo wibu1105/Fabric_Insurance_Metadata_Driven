@@ -1,0 +1,116 @@
+table factpayment
+	lineageTag: 1b6dd191-45fb-4d2c-a0d8-524f81ae26f1
+	sourceLineageTag: 9f96bf39-5a79-4d5f-8af7-82129781b9fc
+
+	column payment_id
+		dataType: string
+		lineageTag: 47f66c9c-6879-478c-a6ca-c82620c36773
+		sourceLineageTag: 29734228-8619-44e1-b77c-ab02d520abcd
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: payment_id
+
+		annotation SummarizationSetBy = User
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 8ab839a1-e026-4701-900c-b532ddbcbe93
+		sourceLineageTag: c0a2293e-3cb5-443c-bc71-99ae0e7df982
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = User
+
+	column agent_key
+		dataType: int64
+		formatString: 0
+		lineageTag: ddfdd027-58b0-41a5-b676-c7c0aa6f9019
+		sourceLineageTag: 63abcb36-e69a-4662-8cba-ee74095258f9
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: agent_key
+
+		annotation SummarizationSetBy = User
+
+	column provider_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 77aef2cf-adbd-4e04-97a3-1581f1a0c306
+		sourceLineageTag: d9d93280-7c96-46cc-a708-39a34bc72a82
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: provider_key
+
+		annotation SummarizationSetBy = User
+
+	column policy_info_key
+		dataType: int64
+		formatString: 0
+		lineageTag: ce19a84a-5ad6-4a66-ba03-20ae3b6e0eb7
+		sourceLineageTag: 990a71cb-6fb0-4fa0-a163-1f529ca6196c
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: policy_info_key
+
+		annotation SummarizationSetBy = User
+
+	column payment_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: ed211b0b-76a7-42f2-a6aa-0bd015ece733
+		sourceLineageTag: 87da2792-1ee5-4515-bd3b-047eeedc96e2
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: payment_date_key
+
+		annotation SummarizationSetBy = User
+
+	column payment_status
+		dataType: string
+		lineageTag: 2e8da6a8-6001-471a-8170-ad159ded08a1
+		sourceLineageTag: c8ac105f-7658-4cfd-93c0-690db2c91523
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: payment_status
+
+		annotation SummarizationSetBy = User
+
+	column payment_type_key
+		dataType: int64
+		formatString: 0
+		lineageTag: b36deaf8-539e-419e-afcc-2189a18fa3b3
+		sourceLineageTag: 3c51c8fb-1970-413e-be63-a72019324270
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: payment_type_key
+
+		annotation SummarizationSetBy = User
+
+	column payment_amount
+		dataType: double
+		lineageTag: 42b1c11f-4d4c-41ab-ac48-c33f66f23c67
+		sourceLineageTag: 0fbbdc00-b59c-4f43-8920-297e062b2258
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: payment_amount
+
+		annotation SummarizationSetBy = User
+
+	column transaction_reference
+		dataType: string
+		lineageTag: dac19782-f4d6-4543-9e3d-86f282ce84c0
+		sourceLineageTag: 70fd026c-91f5-4e58-b9e8-09f7633f04fd
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: transaction_reference
+
+		annotation SummarizationSetBy = User
+
+	partition factpayment = entity
+		mode: directQuery
+		source
+			entityName: factpayment
+			expressionSource: 'DirectQuery to AS - dashboard_semantic_model'
+

@@ -1,0 +1,305 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "4d0a58e0404c02d1440b",
+  "position": {
+    "x": 28.75,
+    "y": 368.75,
+    "z": 20000,
+    "height": 315,
+    "width": 515,
+    "tabOrder": 20000
+  },
+  "visual": {
+    "visualType": "sankey02300D1BE6F5427989F3DE31CCA9E0F32020",
+    "query": {
+      "queryState": {
+        "Source": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FlowMap"
+                    }
+                  },
+                  "Property": "source"
+                }
+              },
+              "queryRef": "FlowMap.source",
+              "nativeQueryRef": "source"
+            }
+          ]
+        },
+        "Destination": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FlowMap"
+                    }
+                  },
+                  "Property": "target"
+                }
+              },
+              "queryRef": "FlowMap.target",
+              "nativeQueryRef": "target"
+            }
+          ]
+        },
+        "Weight": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FlowMap"
+                    }
+                  },
+                  "Property": "Sankey Value"
+                }
+              },
+              "queryRef": "FlowMap.Sankey Value",
+              "nativeQueryRef": "Sankey Value"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "FlowMap"
+                  }
+                },
+                "Property": "Sankey Value"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "nodeComplexSettings": [
+        {
+          "properties": {
+            "nodePositions": {
+              "expr": {
+                "Literal": {
+                  "Value": "'[{\"name\":\"Total Quotations\",\"x\":\"0\",\"y\":\"0\"},{\"name\":\"Converted Quotations\",\"x\":\"147\",\"y\":\"0\"},{\"name\":\"Accepted Quotations\",\"x\":\"147\",\"y\":\"98\"},{\"name\":\"Expired Quotations\",\"x\":\"147\",\"y\":\"134\"},{\"name\":\"Quoted Quotation\",\"x\":\"147\",\"y\":\"170\"},{\"name\":\"Rejected Quotations\",\"x\":\"147\",\"y\":\"207\"},{\"name\":\"Issued Policy\",\"x\":\"305\",\"y\":\"0\"},{\"name\":\"Active Policies\",\"x\":\"459\",\"y\":\"0\"},{\"name\":\"Cancelled Policies\",\"x\":\"459\",\"y\":\"76\"},{\"name\":\"Expired Policies\",\"x\":\"459\",\"y\":\"132\"}]'"
+                }
+              }
+            },
+            "viewportSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"height\":\"241\",\"width\":\"469\"}'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "unit": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI'', wf_segoe-ui_normal, helvetica, arial, sans-serif'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Quotation Flow'"
+                }
+              }
+            },
+            "heading": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Heading3'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6A1F7A'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Arial Black'''"
+                }
+              }
+            },
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 3,
+                      "Percent": 0.2
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6A1F7A'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualTooltip": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,67 @@
+table FlowMap
+	lineageTag: a9863a72-a684-47ae-af4e-a21451746b1d
+
+	measure 'Sankey Value' =
+			
+			SWITCH (
+			    SELECTEDVALUE ( FlowMap[stage_measure] ),
+			    "Rejected Quotations", [Rejected Quotations],
+			    "Expired Quotations", [Expired Quotations],
+			    "Quoted Quotations", [Quoted Quotations],
+			    "Accepted Quotations", [Accepted Quotations],
+			    "Converted Quotations", [Converted Quotations],
+			    "Policies Issued", [Policies Issued],
+			    "Active Policies", [Active Policies],
+			    "Cancelled Policies", [Cancelled Policies],
+			    "Expired Policies", [Expired Policies]
+			)
+		formatString: 0
+		lineageTag: 69e43038-b8a9-4f28-a887-50fb0c4a1325
+
+	column source
+		lineageTag: bef886b2-9ecb-4ed4-ade4-fd198822f80c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [source]
+
+		annotation SummarizationSetBy = Automatic
+
+	column target
+		lineageTag: 3d889460-0da9-40b7-b730-580327e019b6
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [target]
+
+		annotation SummarizationSetBy = Automatic
+
+	column stage_measure
+		lineageTag: e7a06ebf-2c63-4bd8-8fd8-3316a130379b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [stage_measure]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FlowMap = calculated
+		mode: import
+		source =
+				
+				DATATABLE (
+				    "source", STRING,
+				    "target", STRING,
+				    "stage_measure", STRING,
+				    {
+				        { "Total Quotations", "Rejected Quotations", "Rejected Quotations" },
+				        { "Total Quotations", "Expired Quotations", "Expired Quotations" },
+				        { "Total Quotations", "Quoted Quotation", "Quoted Quotations" },
+				        { "Total Quotations", "Accepted Quotations", "Accepted Quotations" },
+				        { "Total Quotations", "Converted Quotations", "Converted Quotations" },
+				        { "Converted Quotations", "Issued Policy", "Policies Issued" },
+				        { "Issued Policy", "Active Policies", "Active Policies" },
+				        { "Issued Policy", "Cancelled Policies", "Cancelled Policies" },
+				        { "Issued Policy", "Expired Policies", "Expired Policies" }
+				    }
+				)
+
+	annotation PBI_Id = 62c68f0560bb4e5b8f9c1dfc80b73374
+

@@ -1,0 +1,90 @@
+table bronze_silver_duplicate_summary
+	lineageTag: c43a54de-dce2-4e60-bcf5-60a638515301
+	sourceLineageTag: [validate].[bronze_silver_duplicate_summary]
+
+	column check_type
+		dataType: string
+		lineageTag: 352e5435-1127-4bd8-a61c-7d479b6cbe0c
+		sourceLineageTag: check_type
+		summarizeBy: none
+		sourceColumn: check_type
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: 8d56b433-a7b9-46ad-967c-f8d733536d61
+		sourceLineageTag: status
+		summarizeBy: none
+		sourceColumn: status
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column table_name
+		dataType: string
+		lineageTag: 3b2e6127-e021-48bc-a552-4b383e0f20cc
+		sourceLineageTag: table_name
+		summarizeBy: none
+		sourceColumn: table_name
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column key_column
+		dataType: string
+		lineageTag: 89b37a94-473d-4b9d-bdbb-06424b2ca5c4
+		sourceLineageTag: key_column
+		summarizeBy: none
+		sourceColumn: key_column
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column duplicate_key_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 0b6c65e4-c432-49e3-b2c1-b4b7d2a26a98
+		sourceLineageTag: duplicate_key_count
+		summarizeBy: sum
+		sourceColumn: duplicate_key_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column extra_duplicate_rows
+		dataType: int64
+		formatString: 0
+		lineageTag: 744aabbb-2a0a-4512-8104-04d449d87377
+		sourceLineageTag: extra_duplicate_rows
+		summarizeBy: sum
+		sourceColumn: extra_duplicate_rows
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_result
+		dataType: string
+		lineageTag: d0117f3e-3b91-40c5-b1a7-58dd1efc5c1b
+		sourceLineageTag: expected_result
+		summarizeBy: none
+		sourceColumn: expected_result
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition bronze_silver_duplicate_summary = entity
+		mode: directLake
+		source
+			entityName: bronze_silver_duplicate_summary
+			schemaName: validate
+			expressionSource: 'DirectLake - Rookie2Engineer_Lakehouse'
+
